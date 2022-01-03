@@ -1,0 +1,46 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{amssymb} % triangle
+\usepackage{romannum} % roman numbers
+\usepackage{physics} % second partial differential
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{bm}
+\setlength\parindent{0pt}
+
+% math typesetting
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
+
+
+\title{Basic methods for data analysis}
+\author{Philipp Renz}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Introduction}
+\section{Summarizing univariate data}
+\input{la-basics}
+
+\section{Summarizing multivariate data}
+\subsection{Bivariate data}
+\subsection{More features}
+\subsection{Principal component analysis}
+\section{Linear algebra: Singular value decomposition}
+\subsection{Another look at PCA}
+\section{Multiple linear regression}
+\section{Probability theory}
+
+
+\end{document}

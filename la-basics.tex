@@ -1,0 +1,62 @@
+\section{Linear algebra: Basics}
+
+In data analysis we will often represent our data as matrices. Consequently many algorithms are described using
+the concept of matrices and their properties which could be broadly called the study of linear algebra. Here I
+don’t want to give an axiomatic introduction but rather provide some basic results with the prerequisite that
+the reader already knows some basics about vectors and matrices.
+We will denote vectors as bold lowercase letters 
+\begin{equation}
+\bm{a} = 
+\begin{pmatrix}
+a_1     \\
+\vdots  \\
+a_n
+\end{pmatrix},
+\end{equation}
+where $a_i$ is the $\text{i}^{th}$ entry of the vector $\bm{a}$.
+
+Matrices are denoted by bold uppercase letters
+\begin{equation}
+    \bm{A} = 
+    \begin{pmatrix}
+        a_{11} & \hdots & a_{1n} \\ 
+        \vdots & \ddots & \vdots \\
+        a_{m1} & \hdots & a_{mn}
+    \end{pmatrix}.
+\end{equation}
+Depending on the context it is useful to view a matrix as a concetation of either row or column vectors.
+\begin{align}
+    \bm{A} = \begin{pmatrix}
+        \horzbar & \bm{a}_1^r & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m^r &  \horzbar \\
+    \end{pmatrix} = 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{a}_1^c & \hdots & \bm{a}_n^c \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}.
+\end{align}
+We made an explicit distinction between row- and column vectors using superscripts here but these will often be left out
+for better readability.
+
+\subsection{Matrix multiplication}
+Given two matrices 
+\begin{align}
+    \bm{A} = 
+    \begin{pmatrix}
+        a_{11} & \hdots & a_{1n} \\ 
+        \vdots & \ddots & \vdots \\
+        a_{m1} & \hdots & a_{mn}
+    \end{pmatrix} \in R^{m \times n}, &&
+    \bm{B} = 
+    \begin{pmatrix}
+        b_{11} & \hdots & b_{1p} \\ 
+        \vdots & \ddots & \vdots \\
+        b_{n1} & \hdots & b_{np}
+    \end{pmatrix} \in R^{n \times p}
+\end{align}
+their product $\bm{C} = \bm{A}\bm{B}$ is of shape $(m \times p)$ and it's entries are
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk}
+\end{equation}
