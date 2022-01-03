@@ -11,3 +11,4 @@
 \contentsline {subsection}{\numberline {5.1}Another look at PCA}{ii}{subsection.5.1}%
 \contentsline {section}{\numberline {6}Multiple linear regression}{ii}{section.6}%
 \contentsline {section}{\numberline {7}Probability theory}{ii}{section.7}%
+\contentsline {section}{\numberline {8}}{ii}{section.8}%
