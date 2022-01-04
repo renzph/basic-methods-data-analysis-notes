@@ -1,0 +1,65 @@
+\chapter{Principal component analysis}
+\paragraph{Motivating example}
+There is a park and we are given the locations of the trees in it
+given two numbers.
+It appears that they are approximately planted in a line with slight deviations.
+However we would like to find a single direction which tells us the most about the location of tree.
+In the figure it is evident that if we can get a very good estimate of where trees are,
+by knowing how far to go along the red line. The (blue) distance orthogonal to it is of less importance.
+If we encoded each point by it's red and blue distance we would find 
+that the red ones vary a lot more than the blue ones.
+Thus we will define the most important direction as the one along which the data has the highest variance.
+
+\section{Variance maximization}
+Given a vector $\bm{v}$ with unit length  $||\bm{v}||=1$ we can calculate the 
+coordinate wrt. to it via a dot product,
+\begin{equation}
+    y_i = \bm{x}_i \cdot \bm{v}, 
+\end{equation}
+yielding a scalar for each data-point.
+The variance of the values $\{y_1, \hdots, y_n\}$ is 
+\begin{align}
+    &\frac{1}{n} \sum_{i=1}^n y_i^2 - \bar{y}^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n (\bm{x}_i \bm{v})^2 - \left(\frac{1}{n} \sum_{i=1}^n \bm{x}_i\bm{v}\right)^2 =& \text{def. of $y_i$} \\
+    =&\frac{1}{n} \sum_{i=1}^n \sum_{j=1}^m \sum_{k=1}^m x_{ij} v_j x_{ik} v_k - \bm{v}^T \bm{\mu} \bm{\mu}^T \bm{v} =&\text{write dot product as sum}\\
+    =&\frac{1}{n}  \sum_{j=1}^m \sum_{k=1}^m v_j  \red{\sum_{i=1}^n x^T_{ji}  x_{ik}} v_k - \bm{v}^T \bm{\mu} \bm{\mu}^T \bm{v} =&\text{rearrange}\\
+    =&\frac{1}{n}  \sum_{j=1}^m \sum_{k=1}^m v_j  \red{[\bm{X^T X}]_{ik}} v_k - \bm{v}^T \bm{\mu} \bm{\mu}^T \bm{v} =&\text{replace sum by m.m.}\\
+    =&\frac{1}{n}  \sum_{j=1}^m \sum_{k=1}^m v_j  [\bm{X^T X}]_{ik} v_k - \bm{v}^T \bm{\mu} \bm{\mu}^T \bm{v} =&\text{replace sum by m.m.}\\
+    =&\frac{1}{n}  \bm{v}^T \bm{X^T X} \bm{v}- \bm{v}^T \bm{\mu} \bm{\mu}^T \bm{v} =&\text{replace sums by m.m.}\\
+    =&\bm{v}^T \left(\frac{1}{n}\bm{X^T X} - \bm{\mu} \bm{\mu}^T \right) \bm{v} =&\text{rearrange}\\
+    =&\bm{v}^T \bm{C} \bm{v} & \text{def. of covariance}
+\end{align}
+Since $\bm{C}$ is real and symmetric we can express it using it's eigenvalues and eigenvectors,
+\begin{equation}
+    \bm{C} = \sum_{j=1}^m \lambda_j \bm{w}_j \bm{w}_j^T.
+\end{equation}
+Since $(w_1, \hdots, w_m)$ form an orthonormal basis we can also write $\bm{v}$ as linear combination of them,
+\begin{equation}
+    \bm{v} = \sum_{i=1}^m \alpha_i \bm{w}_i.
+\end{equation}
+Thus we shift problem of finding the entries of $\bm{v}$ to finding the $\alpha_i$ that maximize the variance.
+We can write our objective as 
+\begin{align}
+    \bm{v^T} \bm{C v} &= \sum_{i=1}^m \alpha_i \bm{w}_i^T \sum_{j=1}^m \bm{w}_j\bm{w}_j^T \lambda_j \sum_{k=1}^m \alpha_k \bm{w}_k^T &\\
+    &= \sum_{i=1}^m \sum_{j=1}^m \sum_{k=1}^m \alpha_{i} \alpha_{k} \lambda_{j} \red{\bm{w}_i^T \bm{w}_j} \blue{\bm{w}_j^T \bm{w}_k} &\\
+    &= \sum_{i=1}^m \sum_{j=1}^m \sum_{k=1}^m \alpha_{i} \alpha_{k} \lambda_{j} \red{\delta_{ij}} \blue{\delta_{jk}}&\\
+    &= \sum_{i=1}^m \sum_{j=1}^m  \alpha_{i} \alpha_{j} \lambda_{j} \delta_{ij} & \text{sum over $k$} \\ 
+    &= \sum_{i=1}^m \alpha_{i} \alpha_{i} \lambda_{i}  & \text{sum over $j$} \\ 
+    &= \sum_{i=1}^m \alpha_{i}^2 \lambda_{i}.
+\end{align}
+
+Since $||\bm{v}|| = 1$ we know that $\sum_{i=1}^m \alpha_i^2 = 1$. 
+The above result gives us a weighted average which is maximal when $\alpha_1=1$ since $\lambda_1$ is (one of) the largest eigenvalue(s).
+Thus the direction in which the variance of our data is maximal is just the direction of the eigenvector with the largest eigenvalue.
+
+We now want to find the second most important direction 
+
+\red{Problem: Why do we want the directions to be orthogonal.}
+
+
+
+
+
+
+
+

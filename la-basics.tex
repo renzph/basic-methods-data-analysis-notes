@@ -1,4 +1,4 @@
-\section{Linear algebra: Basics}
+\chapter{Linear algebra: Basics}
 
 In data analysis we will often represent our data as matrices. Consequently many algorithms are described using
 the concept of matrices and their properties which could be broadly called the study of linear algebra. Here I
@@ -40,7 +40,7 @@ Depending on the context it is useful to view a matrix as a concetation of eithe
 We made an explicit distinction between row- and column vectors using superscripts here but these will often be left out
 for better readability.
 
-\subsection{Matrix multiplication}
+\section{Matrix multiplication}
 Given two matrices 
 \begin{align}
     \bm{A} = 
@@ -60,3 +60,212 @@ their product $\bm{C} = \bm{A}\bm{B}$ is of shape $(m \times p)$ and it's entrie
 \begin{equation}
     c_{ik} = \sum_{j=1}^n a_{ij} b_{jk}
 \end{equation}
+
+\newcommand{\x}{\times}
+The resulting matrix $\bm{C}$ has a shape of $(m \x p) \leftarrow (m \x n)(n \x p)$. The inner dimension $n$ is "eliminated" by summing over it. One can also see that the sum moves horizontally/rowwise over the entries of A and down the
+columns of B
+
+Often we are interested in a special case in which one of the matrices reduces to a vector, that means it has only
+one column or one row. We define a column vector as a shorthand notation for a matrix $\bm{B} \in R^{n \x 1}$ with only one column and drop the column index:
+
+\begin{equation}
+    \bm{B} =
+    \begin{pmatrix}
+    b_{11} \\
+    \vdots \\
+    b_{n1}
+    \end{pmatrix}     \equalhat
+    \begin{pmatrix}
+        b_{1} \\
+        \vdots \\
+        b_{n}
+    \end{pmatrix} = \bm{b}
+\end{equation}
+
+Implicitly when we talk of a vector b with n elements we mean a matrix $\bm{B} \in R^{n\x 1}$. When we want to talk
+about a matrix with only one row we write this a transposed vector
+\begin{equation}
+    \bm{b^T} = (b_1 \hdots b_n) \equalhat (b_{11} \hdots b_{1n})
+\end{equation}
+
+\subsection{Vector-vector products}
+Two vectors can be multiplied with each other in two different ways. 
+The scalar or inner product is defined as 
+\begin{equation}
+    \bm{a} \cdot \bm{b} = \bm{a}^T \bm{b} = \sum_{i=1}^n a_i b_i 
+\end{equation}
+This can be seen as a multiplication of matrices with shapes $(1 \x m)(m \x 1) \rightarrow (1 \x 1)$ and results in a scalar value.
+
+The outer product between two vectors is 
+\begin{equation}
+    \bm{C} = \bm{a}\bm{b}^T = \begin{pmatrix}
+    a_{1} \\
+    \vdots \\
+    a_{m}
+    \end{pmatrix}
+    \begin{pmatrix}
+        b_1 & \hdots & b_n
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        a_1 b_1 & a_1 b_2 & \hdots & a_1 b_n \\
+        a_2 b_1 & a_2 b_2 & \hdots & a_2 b_n \\
+        \vdots & \vdots   & \ddots & \vdots  \\
+        a_m b_1 & a_m b_2 & \hdots & a_m b_n
+    \end{pmatrix}
+\end{equation}
+
+This means that every column is a multiple of $\bm{a}$ and every row a multiple of $\bm{b}$. 
+We see that the entry $c_{ij} = a_i b_j$.
+
+\subsection{Matrix-vector multiplication}
+The product of a matrix and vector $\bm{c} = \bm{A}\bm{b}$ again is a vector. 
+If $\bm{A} \in R^{m \x n}$ and $\bm{b} \in R^n$ their product
+will be of shape $(m \x 1)$, or $\bm{c} \in R^m$.
+
+\subsubsection{Linear combination of columns}
+
+One can view matrix-vector product, $\bm{c} = \bm{Ab}$, as calculating a linear combination of the columns of $\bm{A}$ weighted by 
+the entries of $\bm{b}$:
+
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+
+\begin{align}
+\bm{Ab} &= \begin{pmatrix}
+    \sum_{j=1}^n a_{1j}b_j\\
+    \sum_{j=1}^n a_{2j}b_j\\
+    \vdots \\
+    \sum_{j=1}^n a_{mj}b_j\\
+\end{pmatrix} = 
+{\setlength\arraycolsep{1pt}
+\begin{pmatrix}
+    \red{a_{11}} b_1 &+& \blue{a_{12}} b_2 &+&\hdots &+& \green{a_{1n}} b_n \\
+    \red{a_{21}} b_1 &+& \blue{a_{22}} b_2 &+&\hdots &+& \green{a_{2n}} b_n \\
+    \red{\vdots} \ \ & & \blue{\vdots} \ \ & &\ddots & & \green{\vdots} \ \ \\
+    \red{a_{m1}} b_1 &+& \blue{a_{m2}} b_2 &+&\hdots &+& \green{a_{mn}} b_n \\
+\end{pmatrix}} = 
+{\setlength\arraycolsep{1pt}
+\begin{pmatrix}
+\red{\vertbar} \ \ & & \blue{\vertbar} \ \ & &        & & \green{\vertbar} \ \ \\
+\red{\bm{a}_1} b_1 &+& \blue{\bm{a}_2} b_2 &+& \hdots &+& \green{\bm{a}_n} b_n \\
+\red{\vertbar} \ \ & & \blue{\vertbar} \ \ & &        & & \green{\vertbar} \ \
+\end{pmatrix}}  \\
+&=\red{\bm{a}_1} b_1 +  \blue{\bm{a}_2} b_2 + \hdots + \green{\bm{a}_n} b_n = \sum_{i=1}^n \bm{a}_i b_i
+\end{align}
+
+One prominent example where this view is useful is that if the columns of $\bm{A}$ form a basis.
+Then a vector $\bm{c}$ can be written as $\bm{c} = \bm{A}\bm{c}_A$, where 
+$\bm{c}_A$ are the coordinates of $\bm{c}$ with respect to the basis $\bm{A}$.
+Equivalently if the columns of $\bm{B}$ form another basis then
+\begin{equation}
+    \bm{c} = \bm{A}\bm{c}_A = \bm{B}\bm{c}_B.
+\end{equation}
+From this equation one can easily get the prescription of calculating
+the coordinates wrt. to $\bm{A}$ given those wrt. $\bm{B}$,
+
+\begin{equation}
+    \bm{c}_A = \bm{A}^{-1} \bm{B}\bm{c}_B.
+\end{equation}
+
+\subsubsection{Dot product}
+Alternatively we can view a matrix vector product $\bm{Ab}$ as 
+calculating the dot products of $\bm{b}$ with each row of $\bm{A}$,
+\begin{equation}
+    \bm{Ab} = \begin{pmatrix}
+        \horzbar & \bm{a}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m &  \horzbar \\
+    \end{pmatrix} 
+    \begin{pmatrix}
+    \vertbar \\
+    \bm{b}  \\
+    \vertbar
+    \end{pmatrix}= 
+    \begin{pmatrix}
+    \bm{a}_{1} \cdot \bm{b} \\
+    \vdots \\
+    \bm{a}_{m} \cdot \bm{b} \\
+    \end{pmatrix}
+\end{equation}
+
+\subsection{Matrix-matrix multiplication}
+Now that we've looked at some special cases of matrix multiplication
+we can go back to the general case 
+$\bm{C} = \bm{AB}$.
+
+Recalling the definition of matrix multiplication 
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk}
+\end{equation}
+we can look at the index $k$ and see that the $k$-th column of $\bm{C}$ is formed by the matrix vector product of $A$ and 
+the $k$-th column vector of $\bm{B}$,
+\begin{equation}
+    \bm{C} = \bm{AB} = \bm{A} \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{b}_1 & \hdots & \bm{b}_p \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \vertbar &        & \vertbar \\
+        \bm{A}\bm{b}_1 & \hdots & \bm{A}\bm{b}_p \\
+        \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+\begin{pmatrix}
+\vertbar &        & \vertbar \\
+\bm{c}_1 & \hdots & \bm{c}_p \\
+\vertbar &        & \vertbar 
+\end{pmatrix}.
+\end{equation}
+Breaking matrix-matrix multiplication down to multiple matrix vector operations
+allows us to view it as calculating multiple linear combinations of the columns of $\bm{A}$
+or calculating the all inner products between the rows of $\bm{A}$ and the columns of $\bm{B}$,
+\begin{equation}
+    \bm{C} = \begin{pmatrix}
+        \horzbar & \bm{a}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m &  \horzbar \\
+    \end{pmatrix} 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{b}_1 & \hdots & \bm{b}_p \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \bm{a}_{1} \cdot \bm{b}_1 & \bm{a}_{1} \cdot \bm{b}_2 & \hdots & \bm{a}_{1} \cdot \bm{b}_p  \\
+        \bm{a}_{2} \cdot \bm{b}_1 & \bm{a}_{2} \cdot \bm{b}_2 & \hdots & \bm{a}_{2} \cdot \bm{b}_p  \\
+        \vdots                    & \vdots                    & \ddots & \vdots                     \\
+        \bm{a}_{m} \cdot \bm{b}_1 & \bm{a}_{m} \cdot \bm{b}_2 & \hdots & \bm{a}_{m} \cdot \bm{b}_p  \\
+    \end{pmatrix}.
+\end{equation}
+From this we can read that $c_{ik} = \bm{a}_i \bm{b}_j$.
+
+\subsubsection{Sum of outer products}
+Another view that is often useful is to 
+write a matrix-matrix multiplication as a sum of outer products.
+Looking again at our basic definition
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk} = a_{i1} b_{1k} + a_{i2} b_{2k} + a_{i3} b_{3k}
+\end{equation}
+we can see that for example the term $a_{i2} b_{2k}$ is the $ik$-th entry of the dot-product between
+the second column vector of $\bm{A}$ and the second row vector of $\bm{B}$.
+Thus we can deduce that the matrix $\bm{C}$ is a sum of outer-products,
+\begin{equation}
+    \bm{C} = \bm{AB} = \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{a}_1 & \hdots & \bm{a}_n \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{b}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{b}_n &  \horzbar \\
+    \end{pmatrix}  = 
+    \sum_{i=1}^n \bm{a}_i \bm{b}_i^T.
+\end{equation}
+
+
+
+
+
+

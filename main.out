@@ -1,13 +1,8 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Summarizing univariate data}{}% 2
-\BOOKMARK [1][-]{section.3}{Linear algebra: Basics}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Matrix multiplication}{section.3}% 4
-\BOOKMARK [1][-]{section.4}{Summarizing multivariate data}{}% 5
-\BOOKMARK [2][-]{subsection.4.1}{Bivariate data}{section.4}% 6
-\BOOKMARK [2][-]{subsection.4.2}{More features}{section.4}% 7
-\BOOKMARK [2][-]{subsection.4.3}{Principal component analysis}{section.4}% 8
-\BOOKMARK [1][-]{section.5}{Linear algebra: Singular value decomposition}{}% 9
-\BOOKMARK [2][-]{subsection.5.1}{Another look at PCA}{section.5}% 10
-\BOOKMARK [1][-]{section.6}{Multiple linear regression}{}% 11
-\BOOKMARK [1][-]{section.7}{Probability theory}{}% 12
-\BOOKMARK [1][-]{section.8}{}{}% 13
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Linear algebra: Basics}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Matrix multiplication}{chapter.2}% 3
+\BOOKMARK [2][-]{subsection.2.1.1}{Vector-vector products}{section.2.1}% 4
+\BOOKMARK [2][-]{subsection.2.1.2}{Matrix-vector multiplication}{section.2.1}% 5
+\BOOKMARK [2][-]{subsection.2.1.3}{Matrix-matrix multiplication}{section.2.1}% 6
+\BOOKMARK [0][-]{chapter.3}{Principal component analysis}{}% 7
+\BOOKMARK [1][-]{section.3.1}{Variance maximization}{chapter.3}% 8
