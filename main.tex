@@ -26,7 +26,14 @@
 \newcommand\equalhat{\mathrel{\stackon[1.5pt]{=}{\stretchto{%
     \scalerel*[\widthof{=}]{\wedge}{\rule{1ex}{3ex}}}{0.5ex}}}}
 
-\includeonly{la-basics,pca}
+
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\orange}[1]{{\color{orange} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+
+
+\includeonly{la-basics,pca, la-svd}
 
 
 \title{Basic methods for data analysis}
@@ -41,7 +48,7 @@
 \include{la-basics}
 \include{desc-stats}
 \include{pca}
-% \chapter{Linear algebra: Singular value decomposition}
+\include{la-svd}
 % \subsection{Another look at PCA}
 % \section{Multiple linear regression}
 % \section{Probability theory}

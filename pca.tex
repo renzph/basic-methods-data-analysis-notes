@@ -52,9 +52,64 @@ Since $||\bm{v}|| = 1$ we know that $\sum_{i=1}^m \alpha_i^2 = 1$.
 The above result gives us a weighted average which is maximal when $\alpha_1=1$ since $\lambda_1$ is (one of) the largest eigenvalue(s).
 Thus the direction in which the variance of our data is maximal is just the direction of the eigenvector with the largest eigenvalue.
 
-We now want to find the second most important direction 
+We now want to find the second most important direction. For this to make sense we need some additional requirement
+for the new direction, otherwise we could get the same one again.
+Since we now want to find a second vector we rename $\bm{v}$ to $\bm{v_1}$ and are looking for a 
+vector $\bm{v_2}$ that maximizes $\bm{v}_2^T \bm{C} \bm{v}_2$, with the constraint that it has to be orthognal 
+to $\bm{v}_1$, that is $\bm{v}_1 \cdot \bm{v}_2 = 0$.
+If we write the second vector in terms of the eigenvectors of $\bm{C}$,
+\begin{equation}
+    \bm{v}_2 = \sum_{i=1}^m \beta_i \bm{w}_i,
+\end{equation}
+then 
+\begin{equation}
+    \bm{v}_1^T \bm{v}_2 = \sum_{i=1}^m \beta_i \bm{w}_i^T \bm{w}_1 = \sum_{i=1}^m \beta_i \delta_{1i} = \beta_1 = 0
+\end{equation}
+We also have that 
+\begin{equation}
+    \bm{v}_2^T \bm{C} \bm{v}_2 = \sum_{i=1}^m \lambda_i \beta_i^2,
+\end{equation}
+and similar to the reasoning above to maximize this under the orthogonality constraint
+we have to set $\beta_2 = 1$ and thus $\bm{v}_2 = \bm{w}_2$.
+\red{Problem: Why do we want the directions to be orthogonal. Somehow clear but I don't like the reasoning.
+Is this easier to do with lossy compression?} 
 
-\red{Problem: Why do we want the directions to be orthogonal.}
+\section{PCA as lossy compression}
+Above we tried to find directions with maximal variance.
+Next we want to look at PCA as lossy compression.
+In general we could try to find a simple rule that allows us to reconstruct our data.
+For example if we have bivariate data with the relation $y_i = x_i^2$ we only really need to store the $x_i$-values
+for each datapoint as we can reconstruct the $y$-values from it.
+But if we allow to general rules we run into the problem of overfitting.
+Thus we will allow our compression method to use a linear transformations.
+
+We now look at what happens when we 
+leave some of the vectors out of the picture and only include $l$ components to encode our data.
+\begin{equation}
+    \bm{x_i} \approx \bm{\mu} + \sum_{j=1}^l \alpha_{ij} \bm{v}_j
+\end{equation}
+
+We can calculate the mean squared error of this approximation over the whole dataset.
+\begin{align}
+    \text{MSE} =& \frac{1}{n} \sum_{i=1}^n \left(\bm{x}_i - \bm{\mu} + \sum_{j=1}^l \alpha_{ij} \bm{v_j}\right)^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n \left(\bm{\mu} + \sum_{j=1}^m \alpha_{ij} \bm{v_j} - \bm{\mu} - \sum_{j=1}^l \alpha_{ij} \bm{v_j}\right)^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n \left(\sum_{j=l+1}^m \alpha_{ij} \bm{v_j} \right)^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n \sum_{j=l+1}^m \alpha_{ij} ^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n \sum_{j=l+1}^{m} \left( (\bm{x}_i - \bm{\mu})^T \bm{v}_j \right)^2 \\
+    =& \frac{1}{n} \sum_{i=1}^n \sum_{j=l+1}^{m} \red{\left( (\bm{x}_i - \bm{\mu})^T \bm{v}_j \right)} \blue{\left( (\bm{x}_i - \bm{\mu})^T \bm{v}_j \right)} \\
+    =& \frac{1}{n} \sum_{i=1}^n \sum_{j=l+1}^{m} \red{\sum_{a=1}^m (x_{ia} - \mu_a) v_{ja}} \blue{\sum_{b=1}^m (x_{ib} - \mu_b) v_{jb}}\\
+    =& \sum_{j=l+1}^{m} \sum_{a=1}^m \sum_{b=1}^m v_{ja} \orange{\left(\frac{1}{n} \sum_{i=1}^n (x_{ia} - \mu_a) (x_{ib} - \mu_b) \right)} v_{jb}\\
+    =& \sum_{j=l+1}^{m} \sum_{a=1}^m \sum_{b=1}^m v_{ja} \orange{C_{ab}} v_{jb}\\
+    =& \sum_{j=l+1}^{m} \bm{v}_j^T \bm{C} \bm{v}_j\\
+    =& \sum_{j=l+1}^{m} \bm{v}_j^T \lambda_j \bm{v}_j\\
+    =& \sum_{j=l+1}^{m} \bm{v}_j^T \bm{v}_j \lambda_j \\
+    =& \sum_{j=l+1}^{m} \lambda_j \\
+\end{align}
+
+This means that the mean squared error is given by the sum of the eigenvalues of eigenvectors not used in the approximation.
+If we want to have low reconstruction error using only a few components we should use the ones with high eigenvalues.
+
+
 
 
 

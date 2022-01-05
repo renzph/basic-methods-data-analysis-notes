@@ -11,3 +11,6 @@
 \contentsline {chapter}{\numberline {3}Principal component analysis}{7}{chapter.3}%
 \contentsline {paragraph}{Motivating example}{7}{section*.5}%
 \contentsline {section}{\numberline {3.1}Variance maximization}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}PCA as lossy compression}{8}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Linear algebra: Singular value decomposition}{11}{chapter.4}%
+\contentsline {paragraph}{Proof of existence}{11}{section*.6}%
