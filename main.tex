@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[book]{ml}
 
 % Language setting
 % Replace `english' with e.g. `spanish' to change the document language
@@ -14,10 +14,12 @@
 \usepackage{romannum} % roman numbers
 \usepackage{physics} % second partial differential
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{bm}
+\usepackage{amsmath}
 \setlength\parindent{0pt}
+\allowdisplaybreaks
 
 % math typesetting
 \newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
@@ -31,24 +33,44 @@
 \newcommand{\blue}[1]{{\color{blue} #1}}
 \newcommand{\orange}[1]{{\color{orange} #1}}
 \newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\white}[1]{{\color{white} #1}}
+\newcommand{\purple}[1]{{\color{purple} #1}}
 
+% \includeonly{la-basics,desc-stats,pca,la-svd}
 
-\includeonly{la-basics,pca, la-svd}
+\hypersetup{colorlinks=false,
+   pdfborder=0 0 0,
+   pdftitle={Basic methods of data analysis},
+   pdfauthor=Philipp Renz}
 
-
-\title{Basic methods for data analysis}
+\title{Basic Methods for Data Analysis}
 \author{Philipp Renz}
 \begin{document}
-\frontmatter
-\maketitle
-\tableofcontents
+\pagenumbering{roman}
+\pagestyle{plain}
+
+\lecturenotestitlepage[{\fontsize{26pt}{36pt}\sffamily\bfseries
+Basic Methods of \\ \vspace{0.3cm} \fontsize{32pt}{36pt}\sffamily\bfseries Data Analysis}
+
+\vspace{4cm}
+
+{\LARGE Winter Semester 2021/22}
+
+\vspace{1cm}
+
+{\LARGE by Philipp Renz\\
+\large \today}]
+
+\cleardoublepage
 
 \mainmatter
-\chapter{Introduction}
+% \chapter{Introduction}
 \include{la-basics}
 \include{desc-stats}
 \include{pca}
 \include{la-svd}
+\include{multiple-linear-regression}
+\include{probability}
 % \subsection{Another look at PCA}
 % \section{Multiple linear regression}
 % \section{Probability theory}

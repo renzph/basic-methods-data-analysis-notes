@@ -1,0 +1,168 @@
+\def\ps@headings{%
+	\let\@oddfoot\@empty\let\@evenfoot\@empty
+	\def\@evenhead{\underline{\makebox[\textwidth][l]{%
+		\sffamily\thepage\hfill\leftmark%
+	}}}%
+	\def\@oddhead{\underline{\makebox[\textwidth][l]{%
+		\sffamily\rightmark\hfill\thepage%
+	}}}%
+	\let\@mkboth\markboth
+	\def\chaptermark##1{%
+		\markboth {{
+			\ifnum \c@secnumdepth >\m@ne
+				\@chapapp\ \thechapter. \ %
+			\fi
+			##1%
+		}}{}%
+	}%
+	\def\sectionmark##1{%
+		\markright {{%
+			\ifnum \c@secnumdepth >\z@
+				\thesection. \ %
+			\fi
+			##1%
+		}}%
+	}%
+}
+
+\newenvironment{abstract}{%
+	\chapter*{\abstractname}%
+	\@mkboth{\abstractname}{\abstractname}%
+}{}
+
+\newenvironment{acknowledgments}{%
+	\chapter*{Acknowledgments}%
+	\@mkboth{Acknowledgments}{Acknowledgments}%
+}{}
+
+\renewcommand\tableofcontents{%
+	\if@twocolumn
+		\@restonecoltrue\onecolumn
+	\else
+		\@restonecolfalse
+	\fi
+	\chapter*{\contentsname\@mkboth{\contentsname}{\contentsname}}%
+	\@starttoc{toc}%
+	\if@restonecol\twocolumn\fi
+}
+
+\renewcommand\listoffigures{%
+	\if@twocolumn
+		\@restonecoltrue\onecolumn
+	\else
+		\@restonecolfalse
+	\fi
+	\chapter*{\listfigurename}%
+	\@mkboth{\listfigurename}{\listfigurename}%
+	\@starttoc{lof}%
+	\if@restonecol\twocolumn\fi
+}
+
+\renewcommand\listoftables{%
+	\if@twocolumn
+		\@restonecoltrue\onecolumn
+	\else
+		\@restonecolfalse
+	\fi
+	\chapter*{\listtablename}%
+	\@mkboth{\listtablename}{\listtablename}%
+	\@starttoc{lot}%
+	\if@restonecol\twocolumn\fi
+}
+
+\renewenvironment{thebibliography}[1]{%
+	\chapter*{\bibname}%
+	\@mkboth{\bibname}{\bibname}%
+	\list{\@biblabel{\@arabic\c@enumiv}}%
+	{
+		\settowidth\labelwidth{\@biblabel{#1}}%
+		\leftmargin\labelwidth
+		\advance\leftmargin\labelsep
+		\@openbib@code
+		\usecounter{enumiv}%
+		\let\p@enumiv\@empty
+		\renewcommand\theenumiv{\@arabic\c@enumiv}%
+	}\sloppy
+	\clubpenalty4000
+	\@clubpenalty \clubpenalty
+	\widowpenalty4000%
+	\sfcode`\.\@m
+}
+
+{\def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}\endlist}
+
+\renewenvironment{theindex}{%
+	\if@twocolumn
+		\@restonecolfalse
+	\else
+		\@restonecoltrue
+	\fi
+	\twocolumn[\@makeschapterhead{\indexname}]%
+	\@mkboth{\indexname}{\indexname}%
+	\thispagestyle{plain}\parindent\z@
+	\parskip\z@ \@plus .3\p@\relax
+	\columnseprule \z@
+	\columnsep 35\p@
+	\let\item\@idxitem
+}
+
+{\if@restonecol\onecolumn\else\clearpage\fi}
+\def\@makechapterhead#1{%
+	\vspace*{10\p@}{%
+		\parindent \z@ \normalfont
+		\ifnum \c@secnumdepth >\m@ne
+			\if@mainmatter
+				\Large\sffamily\bfseries \@chapapp\space
+				\thechapter\quad{\color{mlaccent}\leaders\hrule height 0.8mm \hfill}
+				\par\nobreak
+				\vskip 10\p@
+			\fi
+		\fi
+		\interlinepenalty\@M
+		\Huge \bfseries #1\hrule width 0pt height 0pt depth 10pt\par\nobreak\vskip 15pt
+		{\color{mlaccent}\hrule width \textwidth height 0.8mm}
+		\vskip 40\p@
+	}%
+}
+\def\@makeschapterhead#1{%
+	\vspace*{10\p@}{%
+		\parindent \z@ \normalfont
+		\Large\sffamily\bfseries {\color{mlaccent}\hrule  width \textwidth height 0.8mm}
+		\par\nobreak
+		\vskip 25\p@
+		\interlinepenalty\@M
+		\Huge\sffamily\bfseries  #1\hrule width 0pt height 0pt depth 10pt\par\nobreak\vskip 15\p@
+		{\color{mlaccent}\hrule width \textwidth height 0.8mm}
+		\vskip 40\p@
+	}%
+}
+\def\@part[#1]#2{%
+	\ifnum \c@secnumdepth >-2\relax
+		\refstepcounter{part}%
+		\addcontentsline{toc}{part}{\thepart\hspace{1em}#1}%
+	\else
+		\addcontentsline{toc}{part}{#1}%
+	\fi
+	\markboth{}{}%
+	{%
+		\centering
+		\interlinepenalty \@M
+		\normalfont
+		\ifnum \c@secnumdepth >-2\relax
+			\huge\sffamily\bfseries \partname\nobreakspace\thepart
+			\par
+			\vskip 20\p@
+		\fi
+		\Huge\sffamily\bfseries #2\par%
+	}\@endpart%
+}
+\def\@spart#1{%
+	{%
+		\centering
+		\interlinepenalty \@M
+		\normalfont
+		\Huge\sffamily\bfseries #1\par%
+	}\@endpart%
+}
+
+\endinput
