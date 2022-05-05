@@ -244,7 +244,7 @@ Looking again at our basic definition
 \begin{equation}
     c_{ik} = \sum_{j=1}^n a_{ij} b_{jk} = a_{i1} b_{1k} + a_{i2} b_{2k} + a_{i3} b_{3k}
 \end{equation}
-we can see that for example the term $a_{i2} b_{2k}$ is the $ik$-th entry of the dot-product between
+we can see that for example the term $a_{i2} b_{2k}$ is the $ik$-th entry of the outer-product between
 the second column vector of $\bm{A}$ and the second row vector of $\bm{B}$.
 Thus we can deduce that the matrix $\bm{C}$ is a sum of outer-products,
 \begin{equation}
@@ -424,218 +424,79 @@ This form is often practical, for example it’s easy to compute
 
 
 \section{Definiteness}
-A is positive definite if for all: 
-$\Vec{v} \neq 0 \hspace{0.5cm} V^TAV >0$
-A is positive semi-definite if for all $\Vec{v} \ngtr 0 \hspace{0.5cm} V^TAV \geq 0$
-positive definite $\Rightarrow$ %unique minimum\\
-semi-definite $\Rightarrow$ %unique but not minimum
+A matrix $\bm{A}$ is (strictly) positive-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} > 0 \ \quad \forall\quad \bm{v} \neq 0
+\end{align}
+Similarly $\bm{A}$ is positive semi-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} \geq 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+A matrix $\bm{A}$ is (strictly) negative-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} < 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+A matrix $\bm{A}$ is negative-semidefinite if 
+\begin{align}
+    \bm{v}^T \bm{Av} \leq 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+\paragraph{Note:} Don't be confused if definitions vary. Some people say positive-definite for non-strict inequalities and then 
+specify the strict inequality using "stricly positive-definite". Some specifically say positive-semidefinite if they mean non-strict inequality.
+Often the meaning is apparent from the context.
+
+\section{Symmetric matrices}
+A matrix $\bm{A}$ is symmetric if $\bm{A} = \bm{A}^T$ that is if $a_{ij} = a_{ji}$.
+Eigenvalues of real symmetric matrices are real.
+Suppose $\lambda$ is a possibly complex eigenvalue of symmetric matrix $\bm{A}$ and eigenvector $\bm{v} \neq 0$.
+
+\paragraph{Proof:} 
+\begin{align}
+      &\lambda {\bar{\bm{v}}}^T \bm{v}   = \bar{\bm{v}}^T \lambda \bm{v} = \bar{\bm{v}}^T A\bm{v} = \bar{\bm{v}}^T A^T \bm{v}  =         \\
+     =&(A\bar{\bm{v}})^T \bm{v}       = (\bar{A}\bar{\bm{v}})^T \bm{v} = (\bar{\lambda}\bar{\bm{v}})^T = \bar{\lambda}\bar{\bm{v}}^T \bm{v}  
+\end{align}
+From this we see that $\lambda = \bar{\lambda}$, where we used the fact that $\overline{\bm{Av}} = \bm{\bar{A}}$    
+
+For real symmetric matrices eigenvectors with differing related eigenvalues are orthogonal.
+To see this consider the following calculation:
+\begin{align}
+    \lambda_{1} \bm{v}_1^T \bm{v}_2 = \bm{v}_1^T A^T \bm{v}_2 = \bm{v}_1^T A \bm{v}_2 = \bm{v}_1^T \bm{v}_2 \lambda_{2}.
+\end{align}
+Here we see that if $\lambda_{1} \neq \lambda_{2}$ it follows that $\bm{v}_1 \cdot \bm{v}_2 = 0$.
+
+If an eigenvalue is associated with multiple eigenvectors the eigenvectors span a higher dimensional eigenspace. For example, if both 
+$\bm{v}_1$ and $\bm{v}_2$ have an eigenvalue of $\lambda$ we get that
+\begin{align}
+    \bm{A}(a\bm{v}_1+b\bm{v}_2)=a\bm{A}\bm{v}_1+ b \bm{A}\bm{v}_2=a\lambda\bm{v}_1+b\lambda\bm{v}_2= \lambda(a\bm{v}_1+b\bm{v}_2).
+\end{align}
+Thus every linear combination of the two vectors is also an eigenvector.    
+Use gram-schmidt to get orthogonal basis for this space.
+
+Each symmetric real matrix has an orthogonal eigenbasis. 
+In case all eigenvalues are different from each other this follows from above.
+The general case is a bit more complicated but we'll give an intuition below.
+To do this we first need to establish that we can always find at least one non-trivial eigenvector 
+for a matrix $\bm{A}$. This is because the characteristic polynomial will have at least one solution.
+Thus we can find an eigenvector $\bm{v}_1$. Then we take any vector $\bm{u}$ that is orthogonal to $\bm{v}_1$.
+We observe that 
+\begin{align}
+   0 = \bm{u}^T\bm{v}_1 \lambda_1 = \bm{u}^T\bm{Av}_1  = \bm{u}^T\bm{A}^T\bm{v}_1  = (\bm{A}\bm{u})^T\bm{v}_1
+\end{align}
+Thus we know that $\bm{Au}$ stays orthogonal to $\bm{v_1}$.
+This means that we can define a new subspace $V_1^\top$ that is orthogonal to $\bm{v}_1$, i.e. it only contains vectors orthogonal 
+to $\bm{v}_1$. 
+Now we know that $\bm{A}$ maps all vectors $V_1^\top$ to the same space.
+This means we can again find an eigenvector for this mapping. 
+We could in principle transform the linear mapping that $\bm{A}$ represents into a basis of $V_1^\top$.
+Then we would have the familiar matrix form again. 
+In this way we would get a second eigenvector $\bm{v}_2$. 
+This can be done until one has a complete set of eigenvectors. By construction they will all be orthogonal to each other.
 
 
-\section{Eigenvalues (put in at right place)}
 
-\begin{equation*}
-    \begin{array}{l}
-      A =  
-      \begin{pmatrix}
-          a_{11} & a_{12} & a_{13} \\
-          a_{21} & a_{22} & a_{23} \\
-          a_{31} & a_{32} & a_{33}
-      \end{pmatrix}
-      \text{is symmetric if}\\
-      A = A^T  \hspace{0.2cm} i.e. \hspace{0.2cm}if \hspace{0.2cm}a_{ij} = a_{ji}
-    \end{array}
-    \end{equation*}
-    \vspace{10px}
-    
-    A real matrix can have complex eigenvalues
-    \begin{equation*}
-    \begin{array}{l}
-      \begin{pmatrix}
-          0 & 1 \\
-          -1 & 0
-      \end{pmatrix}
-      \Vec{v} = \lambda\Vec{v}\\
-      \\
-      \begin{pmatrix}
-          -\lambda & 1 \\
-          -1 & -\lambda
-      \end{pmatrix}
-      \Vec{v} =0\\
-      \\
-      \det
-      \begin{pmatrix}
-          -\lambda & 1 \\
-          -1 & -\lambda
-      \end{pmatrix}
-      =0\\
-      \lambda^2+1=0
-      \hspace{0.5cm}
-      \lambda = \pm i
-      \hspace{0.5cm}
-      v_{1}=
-      \begin{pmatrix}
-          1 \\
-          i
-      \end{pmatrix}\\
-      \vspace{0.5cm}
-      \begin{pmatrix}
-          -i & 1 \\
-          -i & 1 
-      \end{pmatrix}
-      \begin{pmatrix}
-          x_{1} \\
-          y_{2}
-      \end{pmatrix}
-      =
-      \begin{pmatrix}
-          0 \\
-          0 
-      \end{pmatrix}\\
-      -ix_{1}+y_{2} =0\\
-      x_{1} =1\\
-      y_{2} =i
-    \end{array}
-    \end{equation*}
-    
-    
-    Note:
-    \begin{equation*}
-      \begin{array}{l}
-        \begin{pmatrix}
-            i & 1 \\
-            -1 & i
-        \end{pmatrix}
-        \begin{pmatrix}
-            x \\
-            y
-        \end{pmatrix}
-        =
-        \begin{pmatrix}
-            0 \\
-            0
-        \end{pmatrix}\\
-        x_{i}+y =0 \\
-        x=1\\
-        y=-i\\
-        \Vec{v_{2}} =
-        \begin{pmatrix}
-          1 \\
-          -i
-        \end{pmatrix}\\
-      \end{array}
-    \end{equation*}
-    
-    Complex number: z=a+ib
-    Complex conjugate is defined as $\bar{z}=a-ib$
-    $z\bar{z} = (a+ib)(a-ib) = a^2 + b^2 \geq 0$
-    
-    \begin{equation*}
-      \begin{array}{l}
-      \text{Complex vector  } \Vec{v}=
-        \begin{pmatrix}
-            z_{1} \\
-            z_{2} \\
-            z_{3} \\
-            \vdots \\
-            z_{n}
-        \end{pmatrix}
-      \end{array}
-    \end{equation*}
-    
-    \begin{center}
-        $\bar{\Vec{v}} \cdot \Vec{v} \geq 0$ with equality iff $\Vec{v} = \Vec{0}$
-    \end{center}
-    \vspace{20px}
-    
-    Eigenvalues of symmetric real matrix are real. \\
-    Suppose $\lambda$ is possibly complex eigenvalue of symmetric matrix A and eigenvalue $\Vec{\mathbf{V}} \neq 0$
-    \vspace{10px}
-    
-    \begin{equation*}
-      \begin{array}{l}
-        \lambda \bar{\mathbf{V}}^T \mathbf{V} = \bar{\mathbf{V}}^T \lambda \mathbf{V} = \bar{\mathbf{V}}^T A\mathbf{V} = \bar{\mathbf{V}}^T A^T \mathbf{V} = (A\bar{\mathbf{V}})^T \mathbf{V} = (\bar{A}\bar{\mathbf{V}})^T \mathbf{V} = (\bar{\lambda}\bar{\mathbf{V}})^T = \bar{\lambda}\bar{\mathbf{V}}^T \mathbf{V}\\
-        \Rightarrow \lambda = \bar{\lambda} \text{ since } \bar{\mathbf{V}}^T \mathbf{V} \neq 0\\
-      \end{array}
-    \end{equation*}
-    
-    
-    \vspace{10px}
-    
-    \begin{equation*}
-      \begin{array}{l}
-        A\Vec{\mathbf{V}}=\lambda\Vec{\mathbf{V}}\\
-        \sum a_{ij}\mathbf{V}_{j} = \lambda \mathbf{V}_{i}\\
-        \overline{\sum a_{ij}\mathbf{V}_{j}} = \overline{\lambda\mathbf{V}_{i}}\\
-        \sum_{i}\overline{a_{ij}}\overline{\mathbf{V}_{j}}=\bar{\lambda}\overline{\mathbf{V}_{i}}\\
-        \Rightarrow \bar{A}\bar{v} = \bar{\lambda}\\
-      \end{array}
-    \end{equation*}
-    
-    \vspace{10px}
-    
-    Real symmetric matrices have an orthogonal eigenbasis. \\
-    
-    $\lambda_{1} \Vec{v_{1}}^T \Vec{v_{2}} = \Vec{v_{1}}^T A^T \Vec{V_{2}} = \Vec{v_{1}}^T A \Vec{V_{2}} = \Vec{v_{1}}^T \Vec{V_{2}} \lambda_{2}\\
-    \Rightarrow \text{if } \lambda_{1} \neq \lambda_{2} \text{ and } \bar{v_{1}} \cdot v_{2} =0$ 
-    and thus they are orthogonal.\\
-    \vspace{10px}
-    
-    what if two eigenvectors to same eigenvalues?\\
-    \begin{center}
-        $A(a\Vec{v_{1}}+b\Vec{v_{2}})=aA\Vec{v_{1}}+bA\Vec{v_{2}}=a\lambda\Vec{v_{1}}+b\lambda\Vec{v_{1}}=\lambda(a\Vec{v_{1}}+b\Vec{v_{2}})$
-    \end{center}
-    
-    
-    Linear combination is also eigenvector.\\
-    Use gram-schmidt to get orthogonal basis for this space.\\
-    \vspace{10px}
-    
-    Each vector can be written in this eigenbasis as \\
-    
-    \begin{equation*}
-      \begin{array}{l}
-        b = \sum_{i=1}^{n}\Vec{\mathbf{V}}\Vec{\mathbf{V}}^T \Vec{b}\\ 
-        A = A \sum_{i=1}^{n}\Vec{\mathbf{V}_{i}}\Vec{\mathbf{V}_{i}}^T = \sum_{i=1}^{n}A\Vec{\mathbf{V}_{i}}\Vec{\mathbf{V}_{i}}^T = \sum_{i=1}^{n}\Vec{\mathbf{V}_{i}}\lambda_{i}\Vec{\mathbf{V}_{i}}^T\\
-        A\Vec{b} = \sum_{i=1}^{n}\Vec{\mathbf{V}_{i}}\lambda(\Vec{\mathbf{V}_{i}}^T \Vec{b})
-      \end{array}
-    \end{equation*}
-    
-    \vspace{5px}
-    
-    
-    \begin{equation*}
-      \begin{array}{l}
-        A = \sum_{i=1}^{n}\Vec{\mathbf{V}_{i}}\lambda_{i}\Vec{\mathbf{\mathbf{V}}_{i}}^T\\
-        A_{jk} = \sum_{i}^{}\mathbf{V}_{ij}\lambda_{i}\mathbf{V}_{ik}\\
-        =\sum_{i}^{}\mathbf{V}_{ji}^T\lambda_{i}\mathbf{V}_{ik}\\
-        =\sum_{i}^{}[\mathbf{V}^T \Lambda]_{ji} \mathbf{V}_{ik}\\
-        =[\mathbf{V}^T \Lambda \mathbf{V}]_{jk}\\
-        A = \mathbf{V}^T \Lambda \mathbf{V}
-      \end{array}
-    \end{equation*}
-    
-    $\mathbf{V}_{ij} \hdots $ j-th element of i-th eigenvector\\
-    $\mathbf{V}_{ji}^T \lambda_{i} \hdots$ columne-wise multiplication of matrix  $\mathbf{V}^T$ with eigenvalues $\lambda_{i}$\\
-    
-    \begin{equation*}
-      \begin{array}{l}
-        \begin{pmatrix}
-            \vdots & \vdots\\
-            \Vec{\mathbf{V}_{1}} & \Vec{\mathbf{V}_{2}}\\
-            \vdots & \vdots
-        \end{pmatrix}
-        \begin{pmatrix}
-            \lambda_{1} & 0\\
-            0 & \lambda_{2}
-        \end{pmatrix}
-        =
-        \begin{pmatrix}
-            \vdots & \vdots\\
-            \lambda_{1}\Vec{\mathbf{V}_{1}} & \lambda_{2}\Vec{\mathbf{V}_{2}}\\
-            \vdots & \vdots
-        \end{pmatrix}
-      \end{array}
-    \end{equation*}
+   
 
     \section{Singular value decomposition}
     The singular value decomposition is a useful way to factorize a matrix. 
@@ -981,3 +842,106 @@ semi-definite $\Rightarrow$ %unique but not minimum
     \end{align}
     The blue entries were added when we augmented the $\bm{v}_i$ and the red and green zeros when we 
     completed the $\bm{u}_i$.
+
+
+\section{Miscellaneous}
+\subsection{A real matrix with complex eigenvalues}
+A real matrix can have complex eigenvalues
+\begin{equation*}
+\begin{array}{l}
+  \begin{pmatrix}
+      0 & 1 \\
+      -1 & 0
+  \end{pmatrix}
+  \Vec{v} = \lambda\Vec{v}\\
+  \\
+  \begin{pmatrix}
+      -\lambda & 1 \\
+      -1 & -\lambda
+  \end{pmatrix}
+  \Vec{v} =0\\
+  \\
+  \det
+  \begin{pmatrix}
+      -\lambda & 1 \\
+      -1 & -\lambda
+  \end{pmatrix}
+  =0\\
+  \lambda^2+1=0
+  \hspace{0.5cm}
+  \lambda = \pm i
+  \hspace{0.5cm}
+  v_{1}=
+  \begin{pmatrix}
+      1 \\
+      i
+  \end{pmatrix}\\
+  \vspace{0.5cm}
+  \begin{pmatrix}
+      -i & 1 \\
+      -i & 1 
+  \end{pmatrix}
+  \begin{pmatrix}
+      x_{1} \\
+      y_{2}
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+      0 \\
+      0 
+  \end{pmatrix}\\
+  -ix_{1}+y_{2} =0\\
+  x_{1} =1\\
+  y_{2} =i
+\end{array}
+\end{equation*}
+
+
+Note:
+\begin{equation*}
+  \begin{array}{l}
+    \begin{pmatrix}
+        i & 1 \\
+        -1 & i
+    \end{pmatrix}
+    \begin{pmatrix}
+        x \\
+        y
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        0 \\
+        0
+    \end{pmatrix}\\
+    x_{i}+y =0 \\
+    x=1\\
+    y=-i\\
+    \Vec{v_{2}} =
+    \begin{pmatrix}
+      1 \\
+      -i
+    \end{pmatrix}\\
+  \end{array}
+\end{equation*}
+
+Complex number: z=a+ib
+Complex conjugate is defined as $\bar{z}=a-ib$
+$z\bar{z} = (a+ib)(a-ib) = a^2 + b^2 \geq 0$
+
+\begin{equation*}
+  \begin{array}{l}
+  \text{Complex vector  } \Vec{v}=
+    \begin{pmatrix}
+        z_{1} \\
+        z_{2} \\
+        z_{3} \\
+        \vdots \\
+        z_{n}
+    \end{pmatrix}
+  \end{array}
+\end{equation*}
+
+\begin{center}
+    $\bar{\Vec{v}} \cdot \Vec{v} \geq 0$ with equality iff $\Vec{v} = \Vec{0}$
+\end{center}
+\vspace{20px}
