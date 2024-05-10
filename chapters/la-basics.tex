@@ -1,0 +1,975 @@
+\chapter{Linear algebra: Basics}
+
+In data analysis we will often represent our data as matrices. Consequently many algorithms are described using
+the concept of matrices and their properties which could be broadly called the study of linear algebra. Here I
+don’t want to give an axiomatic introduction but rather provide some basic results with the prerequisite that
+the reader already knows some basics about vectors and matrices.
+We will denote vectors as bold lowercase letters 
+\begin{equation}
+\bm{a} = 
+\begin{pmatrix}
+a_1     \\
+\vdots  \\
+a_n
+\end{pmatrix},
+\end{equation}
+where $a_i$ is the $\text{i}^{th}$ entry of the vector $\bm{a}$.
+
+Matrices are denoted by bold uppercase letters
+\begin{equation}
+    \bm{A} = 
+    \begin{pmatrix}
+        a_{11} & \hdots & a_{1n} \\ 
+        \vdots & \ddots & \vdots \\
+        a_{m1} & \hdots & a_{mn}
+    \end{pmatrix}.
+\end{equation}
+Depending on the context it is useful to view a matrix as a concetation of either row or column vectors.
+\begin{align}
+    \bm{A} = \begin{pmatrix}
+        \horzbar & \bm{a}_1^r & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m^r &  \horzbar \\
+    \end{pmatrix} = 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{a}_1^c & \hdots & \bm{a}_n^c \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}.
+\end{align}
+We made an explicit distinction between row- and column vectors using superscripts here but these will often be left out
+for better readability.
+
+\section{Matrix multiplication}
+Given two matrices 
+\begin{align}
+    \bm{A} = 
+    \begin{pmatrix}
+        a_{11} & \hdots & a_{1n} \\ 
+        \vdots & \ddots & \vdots \\
+        a_{m1} & \hdots & a_{mn}
+    \end{pmatrix} \in R^{m \times n}, &&
+    \bm{B} = 
+    \begin{pmatrix}
+        b_{11} & \hdots & b_{1p} \\ 
+        \vdots & \ddots & \vdots \\
+        b_{n1} & \hdots & b_{np}
+    \end{pmatrix} \in R^{n \times p}
+\end{align}
+their product $\bm{C} = \bm{A}\bm{B}$ is of shape $(m \times p)$ and it's entries are
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk}
+\end{equation}
+
+\newcommand{\x}{\times}
+The resulting matrix $\bm{C}$ has a shape of $(m \x p) \leftarrow (m \x n)(n \x p)$. The inner dimension $n$ is "eliminated" by summing over it. One can also see that the sum moves horizontally/rowwise over the entries of A and down the
+columns of B
+
+Often we are interested in a special case in which one of the matrices reduces to a vector, that means it has only
+one column or one row. We define a column vector as a shorthand notation for a matrix $\bm{B} \in R^{n \x 1}$ with only one column and drop the column index:
+
+\begin{equation}
+    \bm{B} =
+    \begin{pmatrix}
+    b_{11} \\
+    \vdots \\
+    b_{n1}
+    \end{pmatrix}     \equalhat
+    \begin{pmatrix}
+        b_{1} \\
+        \vdots \\
+        b_{n}
+    \end{pmatrix} = \bm{b}
+\end{equation}
+
+Implicitly when we talk of a vector b with n elements we mean a matrix $\bm{B} \in R^{n\x 1}$. When we want to talk
+about a matrix with only one row we write this a transposed vector
+\begin{equation}
+    \bm{b^T} = (b_1 \hdots b_n) \equalhat (b_{11} \hdots b_{1n})
+\end{equation}
+
+\subsection{Vector-vector products}
+Two vectors can be multiplied with each other in two different ways. 
+The scalar or inner product is defined as 
+\begin{equation}
+    \bm{a} \cdot \bm{b} = \bm{a}^T \bm{b} = \sum_{i=1}^n a_i b_i 
+\end{equation}
+This can be seen as a multiplication of matrices with shapes $(1 \x m)(m \x 1) \rightarrow (1 \x 1)$ and results in a scalar value.
+
+The outer product between two vectors is 
+\begin{equation}
+    \bm{C} = \bm{a}\bm{b}^T = \begin{pmatrix}
+    a_{1} \\
+    \vdots \\
+    a_{m}
+    \end{pmatrix}
+    \begin{pmatrix}
+        b_1 & \hdots & b_n
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        a_1 b_1 & a_1 b_2 & \hdots & a_1 b_n \\
+        a_2 b_1 & a_2 b_2 & \hdots & a_2 b_n \\
+        \vdots & \vdots   & \ddots & \vdots  \\
+        a_m b_1 & a_m b_2 & \hdots & a_m b_n
+    \end{pmatrix}
+\end{equation}
+
+This means that every column is a multiple of $\bm{a}$ and every row a multiple of $\bm{b}$. 
+We see that the entry $c_{ij} = a_i b_j$.
+
+\subsection{Matrix-vector multiplication}
+The product of a matrix and vector $\bm{c} = \bm{A}\bm{b}$ again is a vector. 
+If $\bm{A} \in R^{m \x n}$ and $\bm{b} \in R^n$ their product
+will be of shape $(m \x 1)$, or $\bm{c} \in R^m$.
+
+\subsubsection{Linear combination of columns}
+
+One can view matrix-vector product, $\bm{c} = \bm{Ab}$, as calculating a linear combination of the columns of $\bm{A}$ weighted by 
+the entries of $\bm{b}$:
+
+
+\begin{align}
+\bm{Ab} &= \begin{pmatrix}
+    \sum_{j=1}^n a_{1j}b_j\\
+    \sum_{j=1}^n a_{2j}b_j\\
+    \vdots \\
+    \sum_{j=1}^n a_{mj}b_j\\
+\end{pmatrix} = 
+{\setlength\arraycolsep{1pt}
+\begin{pmatrix}
+    \red{a_{11}} b_1 &+& \blue{a_{12}} b_2 &+&\hdots &+& \green{a_{1n}} b_n \\
+    \red{a_{21}} b_1 &+& \blue{a_{22}} b_2 &+&\hdots &+& \green{a_{2n}} b_n \\
+    \red{\vdots} \ \ & & \blue{\vdots} \ \ & &\ddots & & \green{\vdots} \ \ \\
+    \red{a_{m1}} b_1 &+& \blue{a_{m2}} b_2 &+&\hdots &+& \green{a_{mn}} b_n \\
+\end{pmatrix}} = 
+{\setlength\arraycolsep{1pt}
+\begin{pmatrix}
+\red{\vertbar} \ \ & & \blue{\vertbar} \ \ & &        & & \green{\vertbar} \ \ \\
+\red{\bm{a}_1} b_1 &+& \blue{\bm{a}_2} b_2 &+& \hdots &+& \green{\bm{a}_n} b_n \\
+\red{\vertbar} \ \ & & \blue{\vertbar} \ \ & &        & & \green{\vertbar} \ \
+\end{pmatrix}}  \\
+&=\red{\bm{a}_1} b_1 +  \blue{\bm{a}_2} b_2 + \hdots + \green{\bm{a}_n} b_n = \sum_{i=1}^n \bm{a}_i b_i
+\end{align}
+
+One prominent example where this view is useful is that if the columns of $\bm{A}$ form a basis.
+Then a vector $\bm{c}$ can be written as $\bm{c} = \bm{A}\bm{c}_A$, where 
+$\bm{c}_A$ are the coordinates of $\bm{c}$ with respect to the basis $\bm{A}$.
+Equivalently if the columns of $\bm{B}$ form another basis then
+\begin{equation}
+    \bm{c} = \bm{A}\bm{c}_A = \bm{B}\bm{c}_B.
+\end{equation}
+From this equation one can easily get the prescription of calculating
+the coordinates wrt. to $\bm{A}$ given those wrt. $\bm{B}$,
+
+\begin{equation}
+    \bm{c}_A = \bm{A}^{-1} \bm{B}\bm{c}_B.
+\end{equation}
+
+\subsubsection{Dot product}
+Alternatively we can view a matrix vector product $\bm{Ab}$ as 
+calculating the dot products of $\bm{b}$ with each row of $\bm{A}$,
+\begin{equation}
+    \bm{Ab} = \begin{pmatrix}
+        \horzbar & \bm{a}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m &  \horzbar \\
+    \end{pmatrix} 
+    \begin{pmatrix}
+    \vertbar \\
+    \bm{b}  \\
+    \vertbar
+    \end{pmatrix}= 
+    \begin{pmatrix}
+    \bm{a}_{1} \cdot \bm{b} \\
+    \vdots \\
+    \bm{a}_{m} \cdot \bm{b} \\
+    \end{pmatrix}
+\end{equation}
+
+\subsection{Matrix-matrix multiplication}
+Now that we've looked at some special cases of matrix multiplication
+we can go back to the general case 
+$\bm{C} = \bm{AB}$.
+
+Recalling the definition of matrix multiplication 
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk}
+\end{equation}
+we can look at the index $k$ and see that the $k$-th column of $\bm{C}$ is formed by the matrix vector product of $A$ and 
+the $k$-th column vector of $\bm{B}$,
+\begin{equation}
+    \bm{C} = \bm{AB} = \bm{A} \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{b}_1 & \hdots & \bm{b}_p \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \vertbar &        & \vertbar \\
+        \bm{A}\bm{b}_1 & \hdots & \bm{A}\bm{b}_p \\
+        \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+\begin{pmatrix}
+\vertbar &        & \vertbar \\
+\bm{c}_1 & \hdots & \bm{c}_p \\
+\vertbar &        & \vertbar 
+\end{pmatrix}.
+\end{equation}
+Breaking matrix-matrix multiplication down to multiple matrix vector operations
+allows us to view it as calculating multiple linear combinations of the columns of $\bm{A}$
+or calculating the all inner products between the rows of $\bm{A}$ and the columns of $\bm{B}$,
+\begin{equation}
+    \bm{C} = \begin{pmatrix}
+        \horzbar & \bm{a}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{a}_m &  \horzbar \\
+    \end{pmatrix} 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{b}_1 & \hdots & \bm{b}_p \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \bm{a}_{1} \cdot \bm{b}_1 & \bm{a}_{1} \cdot \bm{b}_2 & \hdots & \bm{a}_{1} \cdot \bm{b}_p  \\
+        \bm{a}_{2} \cdot \bm{b}_1 & \bm{a}_{2} \cdot \bm{b}_2 & \hdots & \bm{a}_{2} \cdot \bm{b}_p  \\
+        \vdots                    & \vdots                    & \ddots & \vdots                     \\
+        \bm{a}_{m} \cdot \bm{b}_1 & \bm{a}_{m} \cdot \bm{b}_2 & \hdots & \bm{a}_{m} \cdot \bm{b}_p  \\
+    \end{pmatrix}.
+\end{equation}
+From this we can read that $c_{ik} = \bm{a}_i \bm{b}_j$.
+
+\subsubsection{Sum of outer products}
+Another view that is often useful is to 
+write a matrix-matrix multiplication as a sum of outer products.
+Looking again at our basic definition
+\begin{equation}
+    c_{ik} = \sum_{j=1}^n a_{ij} b_{jk} = a_{i1} b_{1k} + a_{i2} b_{2k} + a_{i3} b_{3k}
+\end{equation}
+we can see that for example the term $a_{i2} b_{2k}$ is the $ik$-th entry of the outer-product between
+the second column vector of $\bm{A}$ and the second row vector of $\bm{B}$.
+Thus we can deduce that the matrix $\bm{C}$ is a sum of outer-products,
+\begin{equation}
+    \bm{C} = \bm{AB} = \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{a}_1 & \hdots & \bm{a}_n \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{b}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{b}_n &  \horzbar \\
+    \end{pmatrix}  = 
+    \sum_{i=1}^n \bm{a}_i \bm{b}_i^T.
+\end{equation}
+
+\section{Orthogonal matrices}
+
+An orthogonal matrix is a square matrix with the special property that its transposed is equal to its inverse.
+That is for $\bm{U} \in \mathbb{R}^{m \x m}$
+\begin{align}
+    \bm{U^T} \bm{U} &= \bm{U} \bm{U^T} = \bm{1} \\
+    \bm{U}^T &= \bm{U}^{-1}
+\end{align}
+
+Viewing this matrix-matrix product as pairwise dot-products between the columns/rows of the two matrices
+reveals that the both the columns as well as the rows of $\bm{U}$ form an orthonormal set of vectors:
+\begin{align}
+    \begin{pmatrix}
+        \horzbar & \bm{u}_1 & \horzbar \\
+                  & \vdots   &  \\
+        \horzbar & \bm{u}_m &  \horzbar \\
+    \end{pmatrix} 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_m \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \bm{u}_{1} \cdot \bm{u}_{1} & \bm{u}_{1} \cdot \bm{u}_{2} & \hdots & \bm{u}_{1} \cdot \bm{u}_{m} \\
+        \bm{u}_{2} \cdot \bm{u}_{1} & \bm{u}_{2} \cdot \bm{u}_{2} & \hdots & \bm{u}_{2} \cdot \bm{u}_{m} \\
+        \vdots                    & \vdots                        & \ddots & \vdots                      \\
+        \bm{u}_{m} \cdot \bm{u}_{1} & \bm{u}_{m} \cdot \bm{u}_{2} & \hdots & \bm{u}_{m} \cdot \bm{u}_{m} \\
+    \end{pmatrix}   
+    \begin{pmatrix}
+        1 & 0 & \hdots & 0 \\
+        0 & 1 & \hdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \hdots & 1
+    \end{pmatrix}
+\end{align}
+
+The transformation can be seen as a rotation followed by reflection.
+This is because angles and lengths are preserved under the transformation.
+To see this take any two vectors $\bm{a}, \bm{b}$ and apply the transform $\bm{U}$.
+We first establish that multiplication of a vector with $\bm{U}$ does not change its length:
+\begin{align}
+    \norm{\bm{Ua}}^2 = \bm{a}^T \red{\bm{U}^T\bm{U}} \bm{a} =\bm{a^T} \red{\bm{1}} \bm{a} = \norm{\bm{a}}^2
+\end{align}
+
+\begin{align}
+    \cos{(\angle(\bm{Ua}, \bm{Ub}))} =&   \frac{\bm{U}\bm{a} \cdot \bm{U} \bm{b}}{\norm{\bm{Ua}} \ \norm{\bm{Ub}} }\\
+    =& \frac{\bm{a}^T \bm{U^T} \bm{U} \bm{b}}{\norm{\bm{Ua}} \ \norm{\bm{Ub}} }\\
+     =& \frac{\bm{a}^T \bm{b}}{\norm{\bm{a}} \norm{\bm{b}}} = \cos{(\angle(\bm{a}, \bm{b}))}.
+\end{align}
+\newcommand{\R}{\mathbb{R}}
+\section{Eigenvalues and eigenvectors}
+A square matrix $\bm{A} \in \R^{n \x n}$ can be seen as a linear map that maps a vector $\bm{v} \in \R^n$ to a vector $\bm{Av} \in \R^n$.
+There are some vectors called \emph{eigenvectors} (derived from the german word "eigen") which are mapped onto a multiple of themselves,
+\begin{align}
+    \bm{Av} = \lambda \bm{v}.
+    \label{eq:evdef}
+\end{align}
+If this equation holds $\bm{v}$ is called an eigenvector and $\lambda$ its associated eigenvalue.
+The eigenvalues are a useful characteristic of a matrix and finding eigenvalues has lots of applications ranging from coupled oscillators, heat and Schrödinger equations in
+physics to principal component analysis in data analysis.
+
+We still need a way to find the eigenvalues/vectors. 
+From \eqref{eq:evdef} we get 
+
+\begin{align}
+    \bm{Av} =& \ \lambda \bm{1}\bm{v} \\
+    (\bm{A} - \lambda \bm{1})\bm{v} =& \ \bm{0}
+    \label{eq:ev_problem}
+\end{align}
+
+This yields a linear system of equations, which only has a solution if the columns of 
+$ \bm{A}-\lambda \bm{1}$ are linearly dependent.
+Thus we can find eigenvalues by setting the determinant of this matrix to zero
+\begin{align}
+    \det(\bm{A} - \lambda \bm{1}) = 0    
+\end{align}
+This gives a polynomial of degree n, called the characteristic polynomial, which according to the fundamental
+theorem of calculus has $n$ roots and can be written as
+\begin{align}
+    \det(\bm{A} - \lambda \bm{1}) = \prod_{i=1}^n (\lambda - \lambda_i),
+\end{align}
+where the $\lambda_i$ are solutions to the equation above. 
+The number of times a specific value occurs in this factorization is called 
+an eigenvalues algebraic multiplicity.
+After calculating the eigenvalues one can insert them into \eqref{eq:ev_problem} one ofter another and solve for the eigenvectors
+$v_i$. One interesting question is whether the set of all eigenvectors form a complete basis of $\R^n$. 
+This is not the case if for an eigenvalue with algebraic multiplicity $n_a > 1$ the null space of $\bm{A} - \lambda_i$ has dimension less than $n_a$.
+
+
+\paragraph{Example} Given a matrix
+\begin{align}
+\bm{A} = 
+\begin{pmatrix}
+    1 & 1 \\
+    0 & 1
+\end{pmatrix}
+\end{align}
+We can calculate it’s characteristic polynomial
+\begin{align}
+    \det(\bm{A} - \lambda \bm{1}) = (1-\lambda)^2
+\end{align}
+Thus we get an eigenvalue $\lambda = 1$ with algebraic multiplicity of two. However when inserting this eigenvalue to
+solve for $\bm{v}$ we get
+\begin{align}
+    (\bm{A} - \lambda \bm{1})  \bm{v} =  \begin{pmatrix}
+        0 & 1 \\
+        0 & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+        v_1 \\
+        v_2
+    \end{pmatrix}
+    \Rightarrow \bm{v} = s \begin{pmatrix}
+        1 \\
+        0
+    \end{pmatrix}
+\end{align}
+
+\subsection{Diagonalization of a matrix}
+If we find an eigenbasis, that means a basis that only consists of eigenvectors, we can write the following:
+\begin{align}
+    \bm{A} \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_n \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \vertbar &        & \vertbar \\
+        \lambda_1\bm{v}_1 & \hdots & \lambda_n\bm{v}_n \\
+        \vertbar &        & \vertbar 
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        \vertbar &        & \vertbar \\
+        \bm{v}_1 & \hdots & \bm{v}_n \\
+        \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \lambda_1 &        &           \\
+                  & \ddots &           \\
+                  &        & \lambda_n
+        \end{pmatrix}
+\end{align} or
+\begin{align}
+    \bm{AV} = \bm{V\Lambda}
+\end{align}
+Since the columns of $\bm{V}$ form a basis they are linear independent and one can invert $\bm{V}$. Thus if there is an
+eigenbasis a matrix can be ”diagonalized”:
+\begin{align}
+    \bm{A} = \bm{V\Lambda V}^{-1} && \bm{\Lambda} = \bm{V}^{-1} \bm{\Lambda V}^{-1}
+\end{align}
+
+This form is often practical, for example it’s easy to compute
+\begin{align}
+    \bm{A}^p &=  \underbrace{\bm{V\Lambda V}^{-1} \bm{V\Lambda V}^{-1} \hdots \bm{V\Lambda V}^{-1}}_{p \ \text{times}} \\
+             &=  \bm{V\Lambda}^p \bm{V}^{-1} = \bm{V} 
+                \begin{pmatrix}
+                    \lambda_1^p &        &             \\
+                                & \ddots &             \\
+                                &        & \lambda_n^p \\
+                \end{pmatrix} \bm{V}^{-1}.
+\end{align}
+
+
+\section{Definiteness}
+A matrix $\bm{A}$ is (strictly) positive-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} > 0 \ \quad \forall\quad \bm{v} \neq 0
+\end{align}
+Similarly $\bm{A}$ is positive semi-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} \geq 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+A matrix $\bm{A}$ is (strictly) negative-definite if 
+\begin{align}
+    \bm{v}^T \bm{Av} < 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+A matrix $\bm{A}$ is negative-semidefinite if 
+\begin{align}
+    \bm{v}^T \bm{Av} \leq 0 \ \quad \forall\quad \bm{v} \neq 0.
+\end{align}
+
+\paragraph{Note:} Don't be confused if definitions vary. Some people say positive-definite for non-strict inequalities and then 
+specify the strict inequality using "stricly positive-definite". Some specifically say positive-semidefinite if they mean non-strict inequality.
+Often the meaning is apparent from the context.
+
+\section{Symmetric matrices}
+A matrix $\bm{A}$ is symmetric if $\bm{A} = \bm{A}^T$ that is if $a_{ij} = a_{ji}$.
+Eigenvalues of real symmetric matrices are real.
+Suppose $\lambda$ is a possibly complex eigenvalue of symmetric matrix $\bm{A}$ and eigenvector $\bm{v} \neq 0$.
+
+\paragraph{Proof:} 
+\begin{align}
+      &\lambda {\bar{\bm{v}}}^T \bm{v}   = \bar{\bm{v}}^T \lambda \bm{v} = \bar{\bm{v}}^T A\bm{v} = \bar{\bm{v}}^T A^T \bm{v}  =         \\
+     =&(A\bar{\bm{v}})^T \bm{v}       = (\bar{A}\bar{\bm{v}})^T \bm{v} = (\bar{\lambda}\bar{\bm{v}})^T = \bar{\lambda}\bar{\bm{v}}^T \bm{v}  
+\end{align}
+From this we see that $\lambda = \bar{\lambda}$, where we used the fact that $\overline{\bm{Av}} = \bm{\bar{A}}$    
+
+For real symmetric matrices eigenvectors with differing related eigenvalues are orthogonal.
+To see this consider the following calculation:
+\begin{align}
+    \lambda_{1} \bm{v}_1^T \bm{v}_2 = \bm{v}_1^T A^T \bm{v}_2 = \bm{v}_1^T A \bm{v}_2 = \bm{v}_1^T \bm{v}_2 \lambda_{2}.
+\end{align}
+Here we see that if $\lambda_{1} \neq \lambda_{2}$ it follows that $\bm{v}_1 \cdot \bm{v}_2 = 0$.
+
+If an eigenvalue is associated with multiple eigenvectors the eigenvectors span a higher dimensional eigenspace. For example, if both 
+$\bm{v}_1$ and $\bm{v}_2$ have an eigenvalue of $\lambda$ we get that
+\begin{align}
+    \bm{A}(a\bm{v}_1+b\bm{v}_2)=a\bm{A}\bm{v}_1+ b \bm{A}\bm{v}_2=a\lambda\bm{v}_1+b\lambda\bm{v}_2= \lambda(a\bm{v}_1+b\bm{v}_2).
+\end{align}
+Thus every linear combination of the two vectors is also an eigenvector.    
+Use gram-schmidt to get orthogonal basis for this space.
+
+Each symmetric real matrix has an orthogonal eigenbasis. 
+In case all eigenvalues are different from each other this follows from above.
+The general case is a bit more complicated but we'll give an intuition below.
+To do this we first need to establish that we can always find at least one non-trivial eigenvector 
+for a matrix $\bm{A}$. This is because the characteristic polynomial will have at least one solution.
+Thus we can find an eigenvector $\bm{v}_1$. Then we take any vector $\bm{u}$ that is orthogonal to $\bm{v}_1$.
+We observe that 
+\begin{align}
+   0 = \bm{u}^T\bm{v}_1 \lambda_1 = \bm{u}^T\bm{Av}_1  = \bm{u}^T\bm{A}^T\bm{v}_1  = (\bm{A}\bm{u})^T\bm{v}_1
+\end{align}
+Thus we know that $\bm{Au}$ stays orthogonal to $\bm{v_1}$.
+This means that we can define a new subspace $V_1^\top$ that is orthogonal to $\bm{v}_1$, i.e. it only contains vectors orthogonal 
+to $\bm{v}_1$. 
+Now we know that $\bm{A}$ maps all vectors $V_1^\top$ to the same space.
+This means we can again find an eigenvector for this mapping. 
+We could in principle transform the linear mapping that $\bm{A}$ represents into a basis of $V_1^\top$.
+Then we would have the familiar matrix form again. 
+In this way we would get a second eigenvector $\bm{v}_2$. 
+This can be done until one has a complete set of eigenvectors. By construction they will all be orthogonal to each other.
+
+
+
+   
+\section{Singular value decomposition}
+The singular value decomposition is a useful way to factorize a matrix. 
+Any matrix $\bm{M} \in R^{m \x n}$ can be written as a product of three matrices
+\begin{align}
+    \underset{(m \x n)}{\bm{M}}  = \underset{(m \x m)}{\bm{U}}\underset{(m \x n)}{\bm{\Sigma}} \underset{(n \x n)}{\bm{V}^T}\\,
+\end{align}
+
+where $\bm{U}$ and $\bm{V}$ are orthogonal 
+\begin{align}
+    \bm{UU}^T = \bm{1}_{m \x m} && \bm{VV}^T = \bm{1}_{n \x n},
+\end{align}
+and $\bm{\Sigma}$ is diagonal.
+
+Without loss of generality we can assume that $m \geq n$. This would only result in empty columns instead of empty rows of $\bm{\Sigma}$.
+The shapes look approximately like this ($5 \x 3$) in the example.
+\begin{align}
+    \begin{bmatrix}
+    &        & \\
+    &        & \\
+    & \bm{M} & \\
+    &        & \\
+    &        & 
+    \end{bmatrix}    = 
+    \begin{bmatrix}
+    & &        & & \\
+    & &        & & \\
+    & & \bm{U} & & \\
+    & &        & & \\
+    & &        & & 
+    \end{bmatrix}_{m \x m}
+    \begin{bmatrix}
+    \sigma_1 &        &          \\
+                & \ddots &          \\
+                &        & \sigma_n \\
+                &        &          \\
+                &        &          
+    \end{bmatrix}_{m \x n}
+    \begin{bmatrix}
+        &          & \\
+        & \bm{V}^T & \\
+        &          &  
+    \end{bmatrix}_{n \x n}
+\end{align}
+
+\paragraph{Proof of existence}
+We will prove that such a representation always exists.
+We know that $\bm{M}^T \bm{M}$ has an orthogonal eigenbasis as it is symmetric, and non-negative eigenvalues as it is positive-definite,
+\begin{align}
+    \bm{M}^T \bm{M} \bm{v}_i = \alpha_i \bm{v}_i, && \alpha_i \geq 0, &&  \bm{v}_i \cdot \bm{v}_j = \delta_{ij}.
+\end{align}
+Next we define vectors 
+\begin{align}
+\bm{u}_i = \frac{\bm{Mv}_i}{\sqrt{\alpha_i}}
+\end{align}
+and observe that they are also pairwise orthogonal
+\begin{align}
+    \bm{u}_i \bm{u}_j = \frac{\bm{v}_i^T \bm{M}^T \bm{Mv}_i}{\sqrt{\alpha_i \alpha_j}} = \frac{\bm{v}_i^T \bm{v}_i \alpha_i}{{\sqrt{\alpha_i \alpha_j}}} = 
+    \frac{\delta_{ij} \alpha_i}{{\sqrt{\alpha_i \alpha_j}}} = 
+    \frac{\delta_{ij} \alpha_i}{{\sqrt{\alpha_i \alpha_i}}} = \delta_{ij}
+\end{align}
+
+We also get that the $\bm{u}_i$ are eigenvectors of $\bm{MM}^T$, 
+\begin{align}
+        (\bm{M}\bm{M}^T) \green{\bm{u}_i}
+    =(\bm{M}\bm{M}^T) \green{\bm{Mv}_i \frac{1}{\sqrt{\alpha_i}}}
+    =\bm{M}\red{(\bm{M}^T \bm{M}) \bm{v}_i} \frac{1}{\sqrt{\alpha_i}} 
+    = \bm{M} \red{\alpha_i \bm{v}_i}  \frac{1}{\sqrt{\alpha_i}} 
+    =  \alpha_i  \green{\frac{\bm{M} \bm{v}_i}{\sqrt{\alpha_i}}} 
+    = \alpha_i \green{\bm{u}_i}
+\end{align}
+
+Next we assume that$\bm{M}^T \bm{M}$ has $l$  non-zero eigenvalues.
+We take the respective eigenvectors $\bm{v}_1, \hdots, \bm{v}_l$  and compute the corresponding $\bm{u}_i$ 
+simultaneously, while using $\sigma_i=\alpha_i^{-\frac{1}{2}}$,
+\begin{align}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} =&
+    \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+    \sigma_1 &        &          \\
+                & \ddots &          \\ 
+                &        & \sigma_l
+    \end{pmatrix} \\
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \sigma_1 &        &          \\
+                    & \ddots &          \\ 
+                    &        & \sigma_l
+        \end{pmatrix}
+    =&
+    \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} \\
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \sigma_1 &        &          \\
+                    & \ddots &          \\ 
+                    &        & \sigma_l
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix} 
+        =&
+    \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix} \\
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \sigma_1 &        &          \\
+                    & \ddots &          \\ 
+                    &        & \sigma_l
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix} 
+    =&
+    \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix} 
+    \label{eq:svd_partial}
+\end{align}
+
+To get to our desired factorization and isolate $\bm{M}$ we would like to get somehow get rid of the last two matrices on the right.
+The $l$ orthonormal vectors $\bm{v}_l$ form a basis of $\mathbb{R^l}$ and $\bm{V}^T \bm{V} = \bm{1}_{l \x l}$.
+However, this does not hold for the transpose, and $\bm{V}^T \bm{V} = \bm{1}_{n \x n}$ does not hold in general. This means
+and we can't just cancel it out. We know however, that 
+\begin{align}
+    \bm{v}_i^T \bm{M}^T \bm{M} \bm{v_i} =  \bm{v}_i^T \bm{v}_i \alpha_i \\
+    \alpha_i = 0 \ \Rightarrow \ \bm{Mv}_i = 0
+\end{align}
+\allowdisplaybreaks
+
+This allows us to do the following: We add some columns/rows to the above such that such that they form 
+a full set of $n$ orthonormal eigenvectors, which always exist. Then we 
+can use the knowledge that 
+\begin{align}
+    &\bm{M} = \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar & \red{\vertbar    } & \red{        }& \red{ \vertbar }\\
+    \bm{v}_1 & \hdots & \bm{v}_l & \red{\bm{v}_{l+1}} & \red{ \hdots }& \red{ \bm{v}_n }\\
+    \vertbar &        & \vertbar & \red{\vertbar    } & \red{        }& \red{ \vertbar }
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1   & \horzbar \\
+                    & \vdots     &          \\
+        \horzbar & \bm{v}_l   & \horzbar \\
+        \red{\horzbar} & \red{\bm{v}_l+1} & \red{\horzbar} \\
+                        & \red{\vdots    } &                \\
+        \red{\horzbar} & \red{\bm{v}_n  } & \red{\horzbar} \\
+    \end{pmatrix} \\
+    =&
+    \begin{pmatrix}
+    \vertbar       &        & \vertbar       & \red{\vertbar    }       & \red{        }& \red{ \vertbar }       \\
+    \bm{M}\bm{v}_1 & \hdots & \bm{M}\bm{v}_l & \red{\bm{M}\bm{v}_{l+1}} & \red{ \hdots }& \red{\bm{M} \bm{v}_n } \\
+    \vertbar       &        & \vertbar       & \red{\vertbar    }       & \red{        }& \red{ \vertbar }
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1   & \horzbar \\
+                    & \vdots     &          \\
+        \horzbar & \bm{v}_l   & \horzbar \\
+        \red{\horzbar} & \red{\bm{v}_l+1} & \red{\horzbar} \\
+                        & \red{\vdots    } &                \\
+        \red{\horzbar} & \red{\bm{v}_n  } & \red{\horzbar} \\
+    \end{pmatrix} \\
+    =&
+    \begin{pmatrix}
+    \vertbar       &        & \vertbar       & \red{\vertbar} & \red{        } & \red{\vertbar} \\
+    \bm{M}\bm{v}_1 & \hdots & \bm{M}\bm{v}_l & \red{\bm{0}  } & \red{ \hdots } & \red{\bm{0}}   \\
+    \vertbar       &        & \vertbar       & \red{\vertbar} & \red{        } & \red{\vertbar}
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1   & \horzbar \\
+                    & \vdots     &          \\
+        \horzbar & \bm{v}_l   & \horzbar \\
+        \red{\horzbar} & \red{\bm{v}_l+1} & \red{\horzbar} \\
+                        & \red{\vdots    } &                \\
+        \red{\horzbar} & \red{\bm{v}_n  } & \red{\horzbar} \\
+    \end{pmatrix}\\
+    =& \bm{M}\begin{pmatrix}
+    \vertbar       &        & \vertbar       & \red{\vertbar} & \red{        } & \red{\vertbar} \\
+    \bm{v}_1 & \hdots & \bm{v}_l & \red{\bm{0}  } & \red{ \hdots } & \red{\bm{0}}   \\
+    \vertbar       &        & \vertbar       & \red{\vertbar} & \red{        } & \red{\vertbar}
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1   & \horzbar \\
+                    & \vdots     &          \\
+        \horzbar & \bm{v}_l   & \horzbar \\
+        \red{\horzbar} & \red{\bm{v}_l+1} & \red{\horzbar} \\
+                        & \red{\vdots    } &                \\
+        \red{\horzbar} & \red{\bm{v}_n  } & \red{\horzbar} \\
+    \end{pmatrix} \\
+    =&
+    \bm{M} \sum_{i=1}^l \bm{v}_i \bm{v}_i^T + \sum_{i=l+1}^n \bm{0} \ \bm{v}_i^T =
+    \bm{M} \sum_{i=1}^l \bm{v}_i \bm{v}_i^T  \\
+    =&     \bm{M}
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{v}_1 & \hdots & \bm{v}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix} = \bm{M}.
+\end{align}
+For this to work we needed to know that $\bm{M} \bm{v}_i = \bm{0}$ for 
+$i \in \{l+1, \dots, n\}$.
+This is just the rhs. of \eqref{eq:svd_partial} and we get that 
+\begin{align}
+    \bm{M} = 
+    \underbrace{
+        \begin{pmatrix}
+            \vertbar &        & \vertbar \\
+            \bm{u}_1 & \hdots & \bm{u}_l \\
+            \vertbar &        & \vertbar 
+        \end{pmatrix}
+    }_{\bm{U}^{(1)}}
+    \underbrace{
+    \begin{pmatrix}
+        \sigma_1 &        &          \\
+                    & \ddots &          \\ 
+                    &        & \sigma_l
+    \end{pmatrix}
+    }_{\bm{\Sigma}^{(1)}}
+    \underbrace{
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix} 
+    }_{\bm{V}^{(1)^T}}
+\end{align}
+This is the reduced singular value decomposition of matrix. 
+However, in many cases we would like the outer matrices to be 
+square and orthogonal. 
+We can achieve this via padding zeros in the diagonal matrix and 
+adding completing the rows/columns of the outer matrices to form full bases.
+
+We first look at the term 
+\begin{align}
+    \bm{DV}^{(1)^T} = 
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{\sigma}_1 & \hdots & \bm{\sigma}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1 & \horzbar \\
+                    & \vdots   &  \\
+        \horzbar & \bm{v}_l &  \horzbar \\
+    \end{pmatrix}  = \sum_{i=1}^l \bm{\sigma_i} \bm{v_i}^T
+\end{align}
+Similar to above we can add rows to $\bm{V}^{(1)^T}$ so that it's rows form a
+complete set of orthonormal vectors. If we add zero columns to $\Sigma$ the overall product
+will not change as is evident from the outer product view of matrix multiplication.
+
+\begin{align}
+    \bm{DV}^{(1)^T} =& \sum_{i=1}^l \bm{\sigma_i} \bm{v_i}^T                                      \\
+                    =& \sum_{i=1}^l \bm{\sigma_i} \bm{v_i}^T + \sum_{i=l+1}^n \bm{0} \bm{v_i}^T   \\
+                    =& \begin{pmatrix}
+                            \vertbar      &        & \vertbar      & \vertbar          &        & \vertbar      \\
+                            \bm{\sigma}_1 & \hdots & \bm{\sigma}_l & \bm{0}_{l+1} & \hdots & \bm{0}_n \\
+                            \vertbar      &        & \vertbar      & \vertbar          &        & \vertbar 
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            \horzbar & \bm{v}_1 & \horzbar \\
+                                    & \vdots   &           \\
+                            \horzbar & \bm{v}_l & \horzbar \\
+                            \horzbar & \bm{v}_{l+1} & \horzbar \\
+                                        & \vdots   &          \\
+                            \horzbar & \bm{v}_n & \horzbar 
+                        \end{pmatrix} \\
+                    =& \bm{\Sigma}^{(2)} \bm{V}^T
+\end{align}
+We have added some columns to $\bm{\Sigma}^{(2)}$ which has a shape of $(l \x n)$. 
+$\bm{V}$ is of shape $(n \x n)$ and now contains a complete set of orthonormal vectors.
+Similar to the above we can add columns to $\bm{U}^{(1)}$ and compensate them via adding
+zero-rows to $\Sigma^{(2)}$.
+\begin{align}
+    \bm{U}^{(1)} \bm{\Sigma}^{(2)} =&
+    \begin{pmatrix}
+    \vertbar &        & \vertbar \\
+    \bm{u}_1 & \hdots & \bm{u}_l \\
+    \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \begin{pmatrix}
+        \horzbar & \bm{\sigma}_1     & \horzbar \\
+                    & \vdots            &          \\
+        \horzbar & \bm{\sigma}_l     & \horzbar \\
+    \end{pmatrix} \\
+    =&\begin{pmatrix}
+        \vertbar &        & \vertbar & \vertbar &        & \vertbar \\
+        \bm{u}_1 & \hdots & \bm{u}_l & \bm{u}_{l+1} & \hdots & \bm{u}_m \\
+        \vertbar &        & \vertbar & \vertbar &        & \vertbar \\
+        \end{pmatrix}
+        \begin{pmatrix}
+            \horzbar & \bm{\sigma}_1     & \horzbar  \\
+                        & \vdots            &           \\
+            \horzbar & \bm{\sigma}_l     &  \horzbar \\
+            \horzbar & \bm{0}_{l+1} & \horzbar  \\
+                        & \vdots            &           \\
+            \horzbar & \bm{0}_m     &  \horzbar \\
+    \end{pmatrix} \\
+    =& \bm{U \Sigma}
+\end{align}
+\allowdisplaybreaks
+
+This yields the SVD in its final form:
+\begin{align}
+    \bm{M} = \bm{U \Sigma V^T} =
+        \begin{pmatrix}
+        \vertbar &        & \vertbar \\
+        \bm{u}_1 & \hdots & \bm{u}_m \\
+        \vertbar &        & \vertbar 
+    \end{pmatrix}
+    \overset{\quad  l \x l \quad \quad \quad\quad \blue{l \x (n-l)}}{
+    \underset{\ \ \ \red{(m-l) \x l} \ \ \quad \green{(m-l) \x (n-l)}}{
+    \begin{pmatrix}
+            \sigma_1 &        &          & \blue{0      } & \blue{\hdots}  &  \blue{0}  \\
+                        & \ddots &          & \blue{\vdots } & \blue{\ddots }  & \blue{\vdots }  \\
+                        &        & \sigma_l & \blue{0      } & \blue{\hdots }  & \blue{0      }  \\
+            \red{0     }   & \red{\hdots} & \red{0     } & \green{0     }  & \green{\hdots} & \green{0} \\
+            \red{\vdots}   & \red{\ddots} & \red{\vdots} & \green{\vdots}  & \green{\ddots} & \green{\vdots}   \\
+            \red{0     }   & \red{\hdots} & \red{0     } & \green{0     }  & \green{\hdots} & \green{0}
+    \end{pmatrix}}}
+    \begin{pmatrix}
+        \horzbar & \bm{v}_1     & \horzbar \\
+                    & \vdots            &          \\
+        \horzbar & \bm{v}_n     & \horzbar \\
+    \end{pmatrix},
+\end{align}
+The blue entries were added when we augmented the $\bm{v}_i$ and the red and green zeros when we 
+completed the $\bm{u}_i$.
+
+
+\section{Miscellaneous}
+\subsection{A real matrix with complex eigenvalues}
+A real matrix can have complex eigenvalues
+\begin{equation*}
+\begin{array}{l}
+  \begin{pmatrix}
+      0 & 1 \\
+      -1 & 0
+  \end{pmatrix}
+  \Vec{v} = \lambda\Vec{v}\\
+  \\
+  \begin{pmatrix}
+      -\lambda & 1 \\
+      -1 & -\lambda
+  \end{pmatrix}
+  \Vec{v} =0\\
+  \\
+  \det
+  \begin{pmatrix}
+      -\lambda & 1 \\
+      -1 & -\lambda
+  \end{pmatrix}
+  =0\\
+  \lambda^2+1=0
+  \hspace{0.5cm}
+  \lambda = \pm i
+  \hspace{0.5cm}
+  v_{1}=
+  \begin{pmatrix}
+      1 \\
+      i
+  \end{pmatrix}\\
+  \vspace{0.5cm}
+  \begin{pmatrix}
+      -i & 1 \\
+      -i & 1 
+  \end{pmatrix}
+  \begin{pmatrix}
+      x_{1} \\
+      y_{2}
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+      0 \\
+      0 
+  \end{pmatrix}\\
+  -ix_{1}+y_{2} =0\\
+  x_{1} =1\\
+  y_{2} =i
+\end{array}
+\end{equation*}
+
+
+Note:
+\begin{equation*}
+  \begin{array}{l}
+    \begin{pmatrix}
+        i & 1 \\
+        -1 & i
+    \end{pmatrix}
+    \begin{pmatrix}
+        x \\
+        y
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        0 \\
+        0
+    \end{pmatrix}\\
+    x_{i}+y =0 \\
+    x=1\\
+    y=-i\\
+    \Vec{v_{2}} =
+    \begin{pmatrix}
+      1 \\
+      -i
+    \end{pmatrix}\\
+  \end{array}
+\end{equation*}
+
+Complex number: z=a+ib
+Complex conjugate is defined as $\bar{z}=a-ib$
+$z\bar{z} = (a+ib)(a-ib) = a^2 + b^2 \geq 0$
+
+\begin{equation*}
+  \begin{array}{l}
+  \text{Complex vector  } \Vec{v}=
+    \begin{pmatrix}
+        z_{1} \\
+        z_{2} \\
+        z_{3} \\
+        \vdots \\
+        z_{n}
+    \end{pmatrix}
+  \end{array}
+\end{equation*}
+
+\begin{center}
+    $\bar{\Vec{v}} \cdot \Vec{v} \geq 0$ with equality iff $\Vec{v} = \Vec{0}$
+\end{center}
+\vspace{20px}

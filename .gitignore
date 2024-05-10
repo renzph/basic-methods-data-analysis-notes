@@ -3,3 +3,5 @@
 *.log
 *.swp
 *.fdb_latexmk
+*.synctex.gz
+*.out

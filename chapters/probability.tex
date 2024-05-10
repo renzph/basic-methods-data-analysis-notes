@@ -1,0 +1,510 @@
+\chapter{Probability theory}
+\section{Probability}
+Probability is a concept to quantify the uncertainty of propositions.
+Probabilities are ascribed to propositions which we'll denote with capital letters.
+For example\par
+    \makebox[1.5cm]{A}  It will rain tomorrow.\par
+    \makebox[1.5cm]{B}  The coin toss will result in heads.
+
+We can negate a proposition and denote it as  \par
+    \makebox[1.5cm]{$\mean{\text{A}}$}  It will \emph{not} rain tomorrow.\par
+    \makebox[1.5cm]{$\mean{\text{B}}$}  The coin toss will \emph{not} result in heads.
+
+  
+The conjuction of two propositions is their connection via "and", and we'll write it as:
+\par
+\makebox[1.5cm]{AB}  It will  rain tomorrow \emph{and} the coin toss will result in heads.
+This is often also denoted by $A \cap B$.
+
+The disjunction of two propositions is their connection via "or", and we'll write it as:
+\par
+\makebox[1.5cm]{A+B}  It will  rain tomorrow \emph{or} the coin toss will result in heads.
+This is often also denoted by $A \cup B$.
+
+The probability of an event is given by $P(A)$. 
+The conditional probability of $A$ given $B$ is written as $P(A|B)$ and denotes 
+the probability of $A$ given that $B$ is true.
+
+It follows three basic rules:
+\begin{enumerate}
+  \item $P(A)=1$:  \text{expresses certainty} 
+  \item $P(A)+P(\mean{A}) = 1$ 
+  \item $P(AB) = P(A|B)P(B) = P(B|A)P(A)$
+\end{enumerate}
+
+Using these rules we can derive more complex rules. For example we can 
+derive 
+\begin{align}
+  P(A+B) = P(A) + P(B) - P(AB)
+\end{align}
+
+Proof:
+\begin{align}
+  P(A+B)&= 1- P(\mean{A}\mean{B}) \\
+        &= 1-P(\mean{A})P(\mean{B}|\mean{A}) \\
+        &= 1 - P(\mean{A})(1-p(B|\mean{A}))\\
+        &= 1- P(\mean{A}) + p(\mean{A})p(B|\mean{A})\\
+        &= P(A) + P(\mean{A}B)\\
+        &=p(A)+P(B)p(\mean{A}|B) \\
+        &=P(A)+P(B)[1-p(A|B)] \\
+        &=P(A)+P(B)- P(A|B)P(B) \\
+        &=P(A)+P(B) - P(AB)
+\end{align}
+If $A$ and $B$ are mutually exclusive $P(AB)=0$ and we get $P(A+B) = P(A)+P(B)$.
+
+This can be extended to three propositions:
+\begin{align}
+  P(A+B+C) = P(A)+P(B)+P(C) - P(AB) - P(BC) - P(CA) + P(ABC)
+\end{align}
+Again if $A,B,C$ are mutually independent $P(A+B+C) = P(A) + P(B) +P(C)$.
+This can be extended to a general rule:
+
+If $A_1, \hdots, A_n$ are mutually exclusive 
+then \begin{align}
+  P(A_1+\hdots+A_n) = P(A_1) + \hdots + P(A_n)
+\end{align}
+
+\subsection{The principle of indifference}
+Let us pose the simple question of what probability 
+we should assign to the event $A_5$, that we will throw a five on a throw of a die.
+Intuitively this should be one sixth. 
+We can use what we derived above to get this result.
+We know for certain that some number will come up and that it will only be one, thus:
+\begin{align}
+  P(A_1+A_2+A_3+A_4+A_5+A_6) = P(A_1) + P(A_2) + P(A_3) + P(A_4) +P(A_5)+P(A_6)=1.
+\end{align}
+The principle of indifference states that if we have no reason to prefer one number over the other 
+their probabilities should be equal thus all $P(A_i) = q$ and 
+\begin{align}
+  6*q = 1\\
+  q = \frac{1}{6}
+\end{align}
+
+While this might seem obvious I think it's nevertheless interesting to know that many things in probability theory are based on very few assumptions.
+
+\subsection{Bayes' Theorem}
+Bayes' Theorem is often referred  to in the context of updating one's beliefs in the light of new evidence.
+It has the following form:
+\begin{align}
+  P(B|A) = \frac{P(A|B)P(B)}{P(A)}
+\end{align}
+It can be interpreted in the following way. We have a belief that statement $B$ is true which is quantified by $P(B)$.
+This is often called the \emph{prior}.
+Then we gain new information and want to update this belief to $P(B|A)$, the \emph{posterior}.
+
+\paragraph{Application of Bayes Theorem}
+We will COVID-19 antigen tests as an example here to show how Bayes' theorem can be used.
+I looked up the accuracy of Covid-19 antigen tests at
+\url{https://www.medizin-transparent.at/corona-antigen-schnelltest/}.
+
+We will use the following notations:
+\begin{itemize}
+  \item $+$: positive test
+  \item $-$: negative test
+  \item i: infected based on PCR test
+  \item ni: not infected based on PCR test
+\end{itemize}
+
+The accuracy of such a test is often reported in terms of two numbers.
+Firstly we are interested in which percentage of true positive cases 
+the test indentifies. This is called the sensitivity.
+In our case the test identified 58\% of the true positives (i) as positive ($+$),
+\begin{center}
+    $P(+|i)=0.58$.
+\end{center}
+This number could easily be made to 100\% by just reporting everyone as positive.
+For that reason we also need to know the number of false positives.
+In our example the false positive rate is 1\%.
+\begin{center}
+    $P(+|ni)=0.01$
+\end{center}
+
+These results come from a trial with the following result.
+Let's say we test $N$ people with both a PCR and an antigen test then we can sort them into four categories:
+\begin{itemize}
+  \item TP: True positive 
+  \item FP: False positive
+  \item TN: True negative
+  \item FN: False negative
+\end{itemize}
+
+\begin{table}[h]
+  \centering
+\begin{tabular}{llll}
+      & i  & ni \\ 
+\hline
+    + & TP & FP \\
+    - & FN & TN \\
+\end{tabular}  
+\end{table}
+
+Out of these numbers we can get the probability that the antigen test recognizes an infection if there really is one,
+\begin{align}
+  P(+|i) = \frac{\text{TP}}{\text{TP}+\text{FN}}
+\end{align} and 
+the probability that the test is positive although there is no infection (false positive rate):
+\begin{align}
+  P(+|ni) = \frac{\text{FP}}{\text{FP}+\text{TN}}
+\end{align}
+
+We next want to find out how certain we should be of an infection given a positive test.
+\begin{align}
+    P(i|+) =& \frac{P(+|i)P(i)}{P(+)} \\
+    P(+)   =& P(+|i)P(i) + P(+|ni)P(ni)
+\end{align}
+
+The thing we are still missung is, $P(i)$, the probability of having an infection before taking the test.
+Without this number we cannot reach $P(i|+)$ which tells us how likely we are actually infected.
+This needs to be estimated first in some way. It makes sense to 
+estimate this based on the prevalence of infected persons in the whole population.
+Depending on this size $P(i|+)$ will be higher or lower.
+
+At the beginning of July 2021 the active case count was around 4000. Dividing by an approximate population of 8,000,000
+we get around
+\begin{align}
+  P(i)=\frac{4,000}{8,000,000} = \frac{1}{2 \cdot 1000}.
+\end{align}
+
+On December 9th, 2021 the active case count was about 115, 000 giving
+\begin{align}
+  P(i)=\frac{115}{8000} \approx \frac{14}{1000}
+\end{align}
+
+For July this gives approximately
+\begin{align}
+  p(i|+) \approx 3\%,  
+\end{align}
+while for December we get 
+\begin{align}
+  p(i|+) \approx 42\%.
+\end{align}
+
+
+\subsection{Marginalization}
+A useful formula referred to as marginalization is 
+\begin{align}
+  P(A) = \sum_{i=1}^{n}P(AB_{i}), 
+\end{align}
+which holds if $\{B_{1},\hdots ,B_{n}\}$ are exhaustive and mutually exclusive.
+This holds because 
+\begin{align}
+  P(A) =& P(A) \underbrace{\sum_{i=1}^{n}P(B_{i}|A)}_{=1} = \sum_{i=1}^{n}P(B_{i}|A)P(A) = \sum_{i=1}^{n}P(AB_{i})
+\end{align}
+
+Consider for example a table which records the frequencies of the color and type of bicycles:
+
+Bike example:\\
+\begin{center}
+\begin{tabular}{llll}
+    & red & blue & green \\
+    \hline
+    city & .22 & .05 & .7 \\
+    mountain & .05 & .18 & .0 \\
+    race & .13 & .20 & .10 \\
+\end{tabular}  
+\end{center}
+
+Consider A= red, $B_{1}$ = city, $B_{2}$ = mountain, $B_{3}$ = race Then
+\begin{align}
+  P(\text{red}) = P(\text{red}, \text{mountain}) + P(\text{red}, \text{city}) + P(\text{red},\text{race})  
+\end{align}
+
+\subsection{Independence}
+Two propositions are called independent of each other 
+if the value of one doesn't affect the probability of the other, which means that we don't 
+change our belief about one given the value of the other:
+
+\begin{align}
+   P(A)  = P(A|B) \quad \text{or} \quad P(B) = P(B|A).
+\end{align}
+if this holds then the joint probability is a product of the marginals.
+\begin{align}
+  P(AB) = P(A|B)P(B) = P(B|A)P(A) =  P(A)P(B) 
+\end{align}
+
+In the example above we have \begin{align}
+  P(\text{green}) = .17\\
+  P(\text{green}|\text{mountain}) =0 \\  
+\end{align}
+Thus the colour and type of bicycles are not independent.
+
+In the next example the color and type are independent given that knowledge about one doesn't say anything about the other.
+\begin{center}
+\begin{tabular}{lll}
+    & red & blue \\
+    \hline
+    city & $1/6$ & $1/6$ \\
+    race & $2/6$ & $2/6$ \\
+\end{tabular} 
+\end{center}
+
+\subsection{Expected value}
+If we have probabilities over numerical variables we can calculate an expected value which intuitively is the average over many samples.
+Take the example of many throws of a six-sided die. We record the results
+\begin{align}
+  \mean{x}   = \frac{1}{N}(1+5+6+2+\hdots +4)\\
+            = \frac{1}{N}(n_{1}1+n_{2}2+\hdots +n_{6}6)\\
+            = \frac{n_{1}}{N}1+\frac{n_{2}}{N}2+\hdots +\frac{n_{6}}{N}6
+\end{align}
+For large $N$ we can assume that the relative frequencies $n_i/N$ will approximate the probabilities $p_i$ and we can define the expected value as 
+\begin{align}
+   E[x] = \sum_{i=1}^{n}p_{i}x_{i}
+\end{align}
+
+The expected value is a linear functional:
+\begin{align}
+  E[\alpha x + \beta y] = \alpha E(x) + \beta E(y)  
+\end{align}
+
+$E[x]$ is also called the population mean.
+   
+We can also compute the expected value ("average") of some function of the $x_i$:
+\begin{align}
+  E[f(x)]  = \sum_{i=1}^{n}p_{i}f(x_{i}).
+\end{align}
+
+\paragraph{Example:} Expected value for binomial distribution $\mathcal{B}(n,p)$.
+The binomial distribution models the probability to get $k$ successes out of $n$ tries where 
+the probability of a success is $p$.
+The pmf is
+\begin{align}
+  p(k) = {n\choose k}p^k(1-p)^{n-k}
+\end{align}
+
+The expected value of this distribution is:
+\begin{align}
+  E[x]&=\sum_{k=0}^{n}k {n\choose k}p^k (1-p)^{n-k}\\
+      &=\sum_{k=0}^{n}k \frac{n!}{(n-k)!k!} p^k (1-p)^{n-k}\\
+      &=np\sum_{k=1}^{n} \frac{(n-1)!}{(n-k)!(k-1)!} p^{k-1} (1-p)^{n-k} \\
+      &=np\sum_{j=0}^{n-1} \frac{(n-1)!}{(n-1-j)!j!} p^j (1-p)^{n-1-j}\\
+      &=np\sum_{j=0}^{m} \frac{m!}{(m-j)!j!} p^j (1-p)^{m-j} \\
+      &=np\sum_{j=0}^{m} {m\choose j} p^j (1-p)^{m-j}\\
+      &=np (p+1-p)^m\\
+      &=np \\
+  E[x]&=np
+\end{align}
+
+\section{Probability density function}
+Generalization of probability mass function (pmf) to handle continuous values.
+As a motivating example consider the question of how much rain there will be tomorrow:
+We can specify our prediction by assigning probabilities to intervals
+\begin{center}
+    $P(0\text{mm} \leq x < 1\text{mm}), P(1\text{mm} \leq x < 2\text{mm}),\hdots$
+\end{center}
+
+It is often more convenient to model this by a continuous function $p(x)$.
+The probability that the amount of rain is in the interval $[a,b]$ can be calculated by 
+\begin{align}
+P(a\leq x \leq b)=\int_{a}^{b} p(x) \,dx
+\end{align}
+
+For a pdf the expected value is calculated using an integral:
+\begin{align}
+  E(x)=\int_{\mathcal{X}}p(x)x \,dx 
+\end{align}
+
+\paragraph{Example}: Given a Gaussian pdf
+\begin{align}
+  p(x)= \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}  
+\end{align}
+its expected value is
+\begin{align}
+   E[x] &= \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty} x e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2} \,dx \\
+        &= \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty} (y+\mu) e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy\\
+        &= \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty} y e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy + \mu \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty} e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy\\
+        &= 0+\mu \int_{-\infty}^{\infty} p(y)\,dy \\
+        &= \mu 
+\end{align}
+  
+One integral vanishes as 
+ \begin{align}
+  \int_{-\infty}^{\infty} y e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy =& \int_{-\infty}^{0} y e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy  + \int_{0}^{\infty} y e^{-\frac{1}{2}(\frac{y}{\sigma})^2} \,dy =\\
+  =& -A + A = 0\\
+\end{align}
+
+The population variance is:
+\begin{align}
+  \text{var}(x) &= E((x-E(x))^2) \\
+         &=E(x^2 - 2E(x)x+E(x)^2)\\
+         &=E(x^2)-E(E(x)x^2) + E(E(x)^2)\\
+         &=E(x^2)-2E(x)E(x) + E(x^2)\\
+         &=E(x^2)-E(x)^2
+\end{align}
+   
+The population covariance is:
+\begin{align}
+  Cov(x,y) = E((x-E(x)))(y-E(x)) = E(xy) - E(x)E(y)
+\end{align}
+    
+The covariance between indepedent variables is zero:
+\begin{align}
+  Cov(x,y) &= E(xy)-E(x)E(y) \\
+           &= \sum_{x\in \mathcal{X}}\sum_{y\in \mathcal{Y}}p(x,y)xy - E(x)E(y) \\
+           &=\sum_{x\in \mathcal{X}}\sum_{y\in \mathcal{Y}} p(x)p(y)xy - E(x)E(y) \\
+           &=\sum_{x\in \mathcal{X}}p(x)x\sum_{y\in \mathcal{Y}}p(y)y - E(x)E(y) = 0
+\end{align}
+    
+Some rules for the covariance:
+\begin{equation*}
+  \begin{array}{l}
+    z = x + y \\
+    \text{var}(z) = \text{var}(x) + \text{var}(y) + 2 \text{cov}(x,y) \\
+    \text{var}(\alpha x) = \alpha ^2 \text{var}(x)
+  \end{array}
+\end{equation*}
+
+If $x_{1},\hdots,x_{n}$ are independent the variance of the sum resolves to the sum of variances:
+\begin{align}
+  \text{var}(x_{1} + \hdots + x_{n}) = \text{var}(x_{1}) + \hdots + \text{var}(x_{n})\\
+\end{align}
+
+The expected value of the sample mean equals the population mean:
+\begin{align}
+    \mean{x} = \frac{1}{n}\sum_{i=1}^{n} x_{i} 
+    E(\bar{x}) = E\left(\frac{1}{n}\sum_{i=1}^{n}x_{i}\right)
+    = \frac{1}{n}\sum_{i=1}^{n} E(x_{i}) 
+    = \frac{1}{n}n\mu 
+    = \mu
+\end{align}
+
+The variance of the sample mean is 
+\begin{align}
+    \text{var}(\bar{x}) = \text{var}\left(\frac{1}{n}\sum_{i=1}^{n}x_{i}\right)
+    =\frac{1}{n^2}\sum_{i=1}^{n}\text{var}(x_{i}) 
+    =\frac{1}{n^2}\sum_{i=1}^{n}\sigma^2
+    = \frac{1}{n^2}n\sigma^2
+    =\frac{\sigma^2}{n}\\    
+\end{align}
+which gives a standard deviation of $\frac{\sigma}{\sqrt{n}}$.
+The more samples we have the more accurate our estimate of the mean will be.
+
+We next look at the expected value of the sample variance:
+\begin{align}
+  E(S^2) =& E\left(\frac{1}{n}\sum_{i=1}^{n}\left(x_{i}-\frac{1}{n}\sum_{j=1}^{n}x_{j}\right)^2\right)\\
+         =&\frac{1}{n}\sum_{i=1}^{n}\left[E(x_{i}^2)+\frac{1}{n^2}
+         \underbrace{E\left(\sum_{j}\sum_{k}x_{j}x_{k}\right)}_{A}-
+         \frac{2}{n} \underbrace{E\left(\sum_{j=1}^{n}x_{i}x_{j}\right)}_{B}\right]
+\end{align}
+
+\begin{align}
+  E(x_{j}x_{k})&=E(x_{j})E(x_{k})   &\text{if} \ j \neq k\\
+  E(x_{j}x_{k})&=E(x_{j}^2)         &\text{if} \ j = k
+\end{align}
+    
+\begin{align}
+A &= E\left(\sum_{j}\sum_{k}x_{j}x_{k}\right) \\
+  &= E\left( \sum_{j}x_{j}^2+\sum_{j}\sum_{k \neq j}x_{j}x_{k} \right)\\
+  &= \sum_{j=1}^{n}E(x_{j}^2)+\sum_{j}\sum_{k \neq j}E(x_{j})E(x_{k})\\
+  &= n(\mu^2 + \sigma^2) + n(n-1)\mu^2\\
+\end{align}
+
+\begin{align}
+  B = E\left(\sum_{j}x_{i}x_{j}\right) &= E(x_{i}^2)+\sum_{j \neq i}E(x_{i}x_{j})\\
+                        &= \sigma^2 + \mu^2 + (n-1)\mu^2 \\
+                        &= \sigma^2 + n\mu^2
+\end{align}
+
+\begin{align}
+    E(S^2) &= \frac{1}{n}\sum_{i=1}^{n}\left(\sigma^2 + \mu^2+ \frac{1}{n^2}(n(\mu^2+\sigma^2)+n(n-1)\mu^2-\frac{2}{n}(\sigma^2+n\mu^2)\right)\\
+           &= \hdots = \frac{n-1}{n}\sigma^2
+\end{align}
+
+This shows that the expected value of the sample variance is an underestimation of the population variance.
+
+A common way to evaluate an estimator is to look at the mean squared error, which can be decomposed into a bias and a variance part.
+\begin{align}
+  \text{MSE}(\hat{\theta}) =& E[(\theta-\hat{\theta})^2]\\
+                           =& E[\theta^2 + \hat{\theta}^2 - 2\hat{\theta}\theta]\\
+                           =& E[\hat{\theta}^2]-E[\hat{\theta}]^2 + E[\hat{\theta}]^2 + E[\hat{\theta^2}] -2E[\hat{\theta}]\theta\\
+                           =& \underbrace{\text{var}[\hat{\theta}]}_{\text{Variance}} + \underbrace{(\theta-E(\hat{\theta}))^2}_{\text{Bias}^2}\\
+\end{align}
+
+The mean squared errors of the two estimators for the variance are
+\begin{align}
+  \text{MSE}(S_{corr}^2) &= \frac{2\sigma^4}{n-1}\\
+  \text{MSE}(S^2) &= \frac{2n-1}{n^2}\sigma^4 = \frac{2-\frac{1}{n}}{n}\sigma^4  
+\end{align}
+The estimator with the minimal mean squared error is
+\begin{align}
+  S_{min}^2 = \frac{1}{n+1}\sum_{i}(x_{i}-\bar{x})^2  
+\end{align} and it's expected error is
+\begin{align}
+  \text{MSE}(S_{min}^2) = \frac{2\sigma^4}{n+1}  
+\end{align}
+
+We get that:
+\begin{align}
+  \text{MSE}(S_{\text{corr}}^2) > \text{MSE}(S^2) > \text{MSE}(S_{\text{min}}^2) 
+\end{align}
+ 
+
+
+\section {Introduction to statistical hypothesis testing}
+\paragraph{Motivating example} Consider the following problem setting.
+You are tossing a coin and I claim that I can predict the outcome without looking at the coin.
+You do not believe me and we decide to make an experiment.
+We throw a coin 5 times and I guess correctly every time.
+The question is whether you should believe that I really can predict the outcomes or if I was just lucky.
+
+In the framework of null hypothesis significance testing this is solved in the following way.
+We first pose two hypotheses:
+\begin{itemize}
+  \item $H_{0}$: Philipp only randomly guesses $\Rightarrow$  Null hypothesis.
+  \item $H_{1}$: Philipp can really predict the outcome $\Rightarrow$ research hypothesis.
+\end{itemize}
+
+Then we look at the probability of the data given that the null hypothesis, $H_0$, is true:
+\begin{align}
+  P(\text{5 correct guesses}| H_{0}) = \frac{1}{2}^5 = \frac{1}{32} = 0.03125
+\end{align}
+The lower this probability the more unlikely it gets that I got five correct guesses just by chance.
+If this probability is smaller than some predefined significance level $\alpha$
+the null hypothesis is rejected and we accept the research hypothesis.
+
+\subsection{Bayesian hypothesis testing}
+However, this reasoning is sometimes criticized.
+The question is to which extent we believe the two hypotheses to be true.
+Intuitively you wouldn't believe my outrageous claim on the basis of a streak of five correct guesses.
+So this prior knowledge of the hardness of the task should somehow influence our position.
+In Bayesian hypothesis testing we would also look at 
+\begin{align}
+  P(\text{5 correct guesses}| H_{1}) = 1
+\end{align}
+Finally we would get the probabilities for our hypotheses by using Bayes' theorem
+\begin{align}
+  P(H_0|D) &= \frac{P(D|H_0)P(H_0)}{P(D)} \\
+  P(H_1|D) &= \frac{P(D|H_1)P(H_1)}{P(D)} 
+\end{align}
+Now the only problem left is to encode our prior belief into the probabilities $P(H_0), P(H_1)$.
+It is not straightforward how to best do this. 
+
+\subsection{Problematic example of NHST}
+
+Revisit the covid testing example:
+\begin{itemize}
+  \item i: infected
+  \item ni: not infected
+  \item $+$: positive test
+  \item $-$: negative test
+\end{itemize}
+
+Our null hypothesis, $H_{0}$ is that we are not infected and $H_1$ is that we are infected.
+Consider the case in which we get a positive test.
+\begin{align}
+  P(+|\text{ni}) = P(\text{data}| H_{0}) = \text{FPR} = 1\% 
+\end{align}
+Thus we can reject the null hypothesis at a significance level of $1\%$. 
+That is that given that the null hypothesis is true the probability of the data is less or equal than 1\%.
+
+However, the quantities we are actually interested in are,
+\begin{align}
+  P(\text{ni}|+), P(\text{ni}|-), P(\text{i}|+), P(\text{i}|-) 
+\end{align}
+To get to these probabilities we need a reasonable prior that is values for $P(\text{ni})$ and $P(\text{i})$.
+A reasonable value for $P(\text{i})$ is the prevalence of the disease in the population.
+we needed the prevalence.
+With the data for July from above we get 
+\begin{align}
+  P(i|+) = 3\%
+\end{align}
+Thus we would reject the null-hypothesis of not being infected with high a significance although the probability of being infected is relatively low.
