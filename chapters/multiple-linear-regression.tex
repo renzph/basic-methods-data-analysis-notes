@@ -64,7 +64,7 @@ The objective is again to minimize the mean squared error,
               =& \frac{1}{n}\sum_{i=1}^{n}\left(\sum_{j=1}^{m}x_{ij}w_{j}-y_{i}\right)^2.
 \end{align}
 
-We again set the gradient w.r.t. to the loss to zero to find a minimum in the loss:
+We again set the gradient w.r.t.\ to the loss to zero to find a minimum in the loss:
 \begin{equation*}
   \begin{array}{l}
    \bm{\nabla}L(\bm{w})=
@@ -106,7 +106,7 @@ If $\bm{X}^T\bm{X}$ is invertible the solution is
     \bm{w}=(\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}
 \end{align}
 
-$X^T X$ is not invertible if there are more features than samples or if columns of $\bm{X}$ are linear dependent. 
+$\bm{X}^T \bm{X}$ is not invertible if there are more features than samples or if columns of $\bm{X}$ are linear dependent. 
 We can solve the system of equations using the SVD of $\bm{X}$:
 \begin{align}
     \bm{X}=\bm{U\Sigma V}^T    
@@ -123,7 +123,7 @@ Inserting this above gives:
 There are different scenarios for the solution depending on the 
 whether there are more samples than features and whether the feature columns are linearly independent.
 
-\paragraph{More samples than features and linearly independent columns:}
+\paragraph{More samples than features and linearly independent feature columns:}
 In this case $\bm{\Sigma}$ has the following form where all $\sigma_i>0$:
 \begin{align}
     \bm{\Sigma} = 
@@ -148,7 +148,7 @@ In this case $\bm{\Sigma}$ has the following form where all $\sigma_i>0$:
                      & \ddots &              & \bm{0}   & \hdots & \bm{0}   \\
                      &        &  \sigma_{m}  & \vertbar &        & \vertbar \\
     \end{pmatrix}_{m \x n}\bm{U}^T \bm{y} \\
-     \bm{w} = 
+    \bm{w} = 
     \bm{V}
     \begin{pmatrix}
         \sigma_{1}^{-1} &        &                & \vertbar &        & \vertbar \\
@@ -157,9 +157,10 @@ In this case $\bm{\Sigma}$ has the following form where all $\sigma_i>0$:
     \end{pmatrix}_{m \x n}\bm{U}^T \bm{y}
 \end{align}
 
-\paragraph{More features than samples:}
-More features than samples will result in a $\bm{\Sigma}$ that includes all-zero columns.
+\paragraph{More features than samples or linearly dependent features columns:}
+More features than samples or linearly dependent features will result in a $\bm{\Sigma}$ that includes all-zero columns.
 In this case the equation above will have the following form.
+Since $\bm{V}$ is invertible we can solve for $\bm{w}' = \bm{V}^T \bm{w}$.
 \begin{align}
     \begin{pmatrix}
         \sigma_{1}^2 &        &               &   & &      &   \\
@@ -181,27 +182,23 @@ In this case the equation above will have the following form.
         0            &        &  \hdots       &   &        & 0      \\                     
     \end{pmatrix}_{m \x n}\bm{U}^T \bm{y} \\
 \end{align}
-We can analyse this in the following way. 
-Since $\bm{V}$ is invertible we can solve for $\bm{w}' = \bm{V}^T \bm{w}$.
 We see that this system of equations is non-trivial only for the upper $l$ rows.
 The lower rows just give equations of the form $0=0$. This also has the effect that 
 the $w`_{l+1}, \hdots, w`_{m}$ are cancelled out of the equation and thus become arbitrary.
 We can write the system of equations above for only the first $l$ components:
 
-\begin{align}
+This gives us the solution for $(w'_{1},\hdots, w'_l)$
+\begin{align}    
     \begin{pmatrix}
         \sigma_{1}^2 &        &               \\
                      & \ddots &               \\
                      &        &  \sigma_{l}^2 \\
     \end{pmatrix} 
-\end{align}
-This gives us the solution for $(w'_{1},\hdots, w'_l)$
-\begin{align}    
     \begin{pmatrix}
         w'_1\\
         \vdots \\
         w'_l
-    \end{pmatrix} = 
+    \end{pmatrix} &= 
     \begin{pmatrix}
         \sigma_{1}   &        &               & 0       & \hdots & 0      \\
                      & \ddots &               & \vdots  &        & \vdots \\
@@ -211,7 +208,7 @@ This gives us the solution for $(w'_{1},\hdots, w'_l)$
         w'_1\\
         \vdots \\
         w'_l
-    \end{pmatrix} = 
+    \end{pmatrix} &=
     \begin{pmatrix}
         \sigma_{1}^{-1}   &        &               & 0       & \hdots & 0      \\
                      & \ddots &                    & \vdots  &        & \vdots \\
